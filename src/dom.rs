@@ -90,6 +90,7 @@ pub fn interval<Msg>(id: DomId, duration: u64, msg: Msg) -> Interval<Msg> {
 pub struct EventConfig {
     pub stop_propagation: bool,
     pub prevent_default: bool,
+    pub match_parents: bool,
 }
 
 #[derive(Clone, serde::Serialize, serde::Deserialize)]
@@ -154,6 +155,23 @@ pub fn on_click<Msg>(id: &DomId, msg: Msg) -> EventListener<Msg> {
             event: EventConfig {
                 stop_propagation: true,
                 prevent_default: true,
+                match_parents: false,
+            },
+        },
+        msg,
+        queue_strategy: QueueStrategy::Fifo,
+    }
+}
+
+pub fn on_click_closest<Msg>(id: &DomId, msg: Msg) -> EventListener<Msg> {
+    EventListener {
+        id: id.clone(),
+        selector: id.selector(),
+        event: Event::Click {
+            event: EventConfig {
+                stop_propagation: true,
+                prevent_default: true,
+                match_parents: true,
             },
         },
         msg,
@@ -174,6 +192,7 @@ where
             event: EventConfig {
                 stop_propagation: true,
                 prevent_default: true,
+                match_parents: false,
             },
         },
         msg: to_msg(Value::default()),
@@ -194,6 +213,7 @@ where
             event: EventConfig {
                 stop_propagation: true,
                 prevent_default: true,
+                match_parents: false,
             },
         },
         msg: to_msg(Value::default()),
@@ -221,6 +241,7 @@ pub fn on_keyup<Msg>(id: DomId, msg: Msg) -> EventListener<Msg> {
             event: EventConfig {
                 stop_propagation: true,
                 prevent_default: true,
+                match_parents: false,
             },
         }),
         msg,
