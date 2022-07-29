@@ -16,7 +16,7 @@ impl Value {
         self.0.parse::<T>()
     }
 
-    pub fn from_id(id: DomId) -> Value {
+    pub fn from_id(id: &DomId) -> Value {
         Value(format!("{}:{}", VALUE_FROM_ID, id))
     }
 }
@@ -182,14 +182,11 @@ pub fn on_click<Msg>(id: &DomId, msg: Msg) -> EventListener<Msg> {
     }
 }
 
-pub fn on_input<Msg, F>(id: DomId, to_msg: F) -> EventListener<Msg>
-where
-    F: FnOnce(Value) -> Msg,
-{
+pub fn on_input<Msg>(id: &DomId, msg: Msg) -> EventListener<Msg> {
     let selector = id.selector();
 
     EventListener {
-        id: id,
+        id: id.clone(),
         selector: selector,
         event: Event::Input {
             event: EventConfig {
@@ -198,19 +195,16 @@ where
                 match_parent_elements: false,
             },
         },
-        msg: to_msg(Value::default()),
+        msg: msg,
         queue_strategy: QueueStrategy::DropOlder,
     }
 }
 
-pub fn on_change<Msg, F>(id: DomId, to_msg: F) -> EventListener<Msg>
-where
-    F: FnOnce(Value) -> Msg,
-{
+pub fn on_change<Msg>(id: &DomId, msg: Msg) -> EventListener<Msg> {
     let selector = id.selector();
 
     EventListener {
-        id: id,
+        id: id.clone(),
         selector: selector,
         event: Event::Change {
             event: EventConfig {
@@ -219,16 +213,16 @@ where
                 match_parent_elements: false,
             },
         },
-        msg: to_msg(Value::default()),
+        msg: msg,
         queue_strategy: QueueStrategy::DropOlder,
     }
 }
 
-pub fn on_keyup<Msg>(id: DomId, msg: Msg) -> EventListener<Msg> {
+pub fn on_keyup<Msg>(id: &DomId, msg: Msg) -> EventListener<Msg> {
     let selector = id.selector();
 
     EventListener {
-        id: id,
+        id: id.clone(),
         selector: selector,
         event: Event::Keyup(KeyboardEventConfig {
             key: Key::Any,
