@@ -97,9 +97,9 @@ pub struct EventConfig {
 #[serde(tag = "type", content = "config")]
 #[serde(rename_all = "camelCase")]
 pub enum Event {
-    Click { event: EventConfig },
-    Input { event: EventConfig },
-    Change { event: EventConfig },
+    Click(EventConfig),
+    Input(EventConfig),
+    Change(EventConfig),
     Keyup(KeyboardEventConfig),
 }
 
@@ -150,13 +150,13 @@ pub struct EventListener<Msg> {
 impl<Msg> EventListener<Msg> {
     pub fn match_parent_elements(mut self) -> Self {
         match self.event {
-            Event::Click { ref mut event } => {
+            Event::Click(ref mut event) => {
                 event.match_parent_elements = true;
             }
-            Event::Input { ref mut event } => {
+            Event::Input(ref mut event) => {
                 event.match_parent_elements = true;
             }
-            Event::Change { ref mut event } => {
+            Event::Change(ref mut event) => {
                 event.match_parent_elements = true;
             }
             Event::Keyup(ref _event) => {}
@@ -170,13 +170,11 @@ pub fn on_click<Msg>(id: &DomId, msg: Msg) -> EventListener<Msg> {
     EventListener {
         id: id.clone(),
         selector: id.selector(),
-        event: Event::Click {
-            event: EventConfig {
-                stop_propagation: true,
-                prevent_default: true,
-                match_parent_elements: false,
-            },
-        },
+        event: Event::Click(EventConfig {
+            stop_propagation: true,
+            prevent_default: true,
+            match_parent_elements: false,
+        }),
         msg,
         queue_strategy: QueueStrategy::Fifo,
     }
@@ -188,13 +186,11 @@ pub fn on_input<Msg>(id: &DomId, msg: Msg) -> EventListener<Msg> {
     EventListener {
         id: id.clone(),
         selector: selector,
-        event: Event::Input {
-            event: EventConfig {
-                stop_propagation: true,
-                prevent_default: true,
-                match_parent_elements: false,
-            },
-        },
+        event: Event::Input(EventConfig {
+            stop_propagation: true,
+            prevent_default: true,
+            match_parent_elements: false,
+        }),
         msg: msg,
         queue_strategy: QueueStrategy::DropOlder,
     }
@@ -206,13 +202,11 @@ pub fn on_change<Msg>(id: &DomId, msg: Msg) -> EventListener<Msg> {
     EventListener {
         id: id.clone(),
         selector: selector,
-        event: Event::Change {
-            event: EventConfig {
-                stop_propagation: true,
-                prevent_default: true,
-                match_parent_elements: false,
-            },
-        },
+        event: Event::Change(EventConfig {
+            stop_propagation: true,
+            prevent_default: true,
+            match_parent_elements: false,
+        }),
         msg: msg,
         queue_strategy: QueueStrategy::DropOlder,
     }
