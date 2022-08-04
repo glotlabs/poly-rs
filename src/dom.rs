@@ -156,7 +156,7 @@ pub enum EventMatcher {
 pub struct EventListener<Msg> {
     pub id: String,
     pub listen_target: ListenTarget,
-    pub listen_event: EventType,
+    pub event_type: EventType,
     pub matchers: Vec<EventMatcher>,
     pub msg: Msg,
     pub propagation: EventPropagation,
@@ -170,7 +170,7 @@ pub fn on_click<Msg>(id: &DomId, msg: Msg) -> EventListener<Msg> {
         matchers: vec![EventMatcher::ExactSelector {
             selector: id.selector(),
         }],
-        listen_event: EventType::Click,
+        event_type: EventType::Click,
         msg,
         propagation: EventPropagation {
             stop_propagation: true,
@@ -187,7 +187,7 @@ pub fn on_click_closest<Msg>(id: &DomId, msg: Msg) -> EventListener<Msg> {
         matchers: vec![EventMatcher::ClosestSelector {
             selector: id.selector(),
         }],
-        listen_event: EventType::Click,
+        event_type: EventType::Click,
         msg,
         propagation: EventPropagation {
             stop_propagation: true,
@@ -204,7 +204,7 @@ pub fn on_input<Msg>(id: &DomId, msg: Msg) -> EventListener<Msg> {
         matchers: vec![EventMatcher::ExactSelector {
             selector: id.selector(),
         }],
-        listen_event: EventType::Input,
+        event_type: EventType::Input,
         msg: msg,
         propagation: EventPropagation {
             stop_propagation: true,
@@ -221,7 +221,7 @@ pub fn on_change<Msg>(id: &DomId, msg: Msg) -> EventListener<Msg> {
         matchers: vec![EventMatcher::ExactSelector {
             selector: id.selector(),
         }],
-        listen_event: EventType::Change,
+        event_type: EventType::Change,
         msg: msg,
         propagation: EventPropagation {
             stop_propagation: true,
@@ -235,7 +235,7 @@ pub fn on_keyup<Msg>(id: &DomId, msg: Msg) -> EventListener<Msg> {
     EventListener {
         id: id.to_string(),
         listen_target: ListenTarget::Document,
-        listen_event: EventType::Keyup,
+        event_type: EventType::Keyup,
         matchers: vec![EventMatcher::ExactSelector {
             selector: id.selector(),
         }],
