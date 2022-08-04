@@ -87,38 +87,35 @@ pub fn interval<Msg>(id: DomId, duration: u64, msg: Msg) -> Interval<Msg> {
 
 #[derive(Clone, serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct EventConfig {
+pub struct EventPropagation {
     pub stop_propagation: bool,
     pub prevent_default: bool,
-    pub match_parent_elements: bool,
-}
-
-#[derive(Clone, serde::Serialize, serde::Deserialize)]
-#[serde(tag = "type", content = "config")]
-#[serde(rename_all = "camelCase")]
-pub enum Event {
-    Click(EventConfig),
-    Input(EventConfig),
-    Change(EventConfig),
-    Keyup(KeyboardEventConfig),
 }
 
 #[derive(Clone, serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct KeyboardEventConfig {
+pub enum EventType {
+    Click,
+    Input,
+    Change,
+    Keyup,
+}
+
+#[derive(Clone, serde::Serialize, serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct KeyboardCombo {
     key: Key,
     alt_key: bool,
     ctrl_key: bool,
     meta_key: bool,
     shift_key: bool,
-    debounce: DebounceConfig,
-    event: EventConfig,
 }
 
 #[derive(Clone, serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub enum Key {
     Any,
+    Escape,
     Key(String),
 }
 
@@ -139,103 +136,114 @@ pub enum QueueStrategy {
 
 #[derive(Clone, serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct EventListener<Msg> {
-    pub id: DomId,
-    pub selector: Selector,
-    pub event: Event,
-    pub msg: Msg,
-    pub queue_strategy: QueueStrategy,
+pub enum ListenTarget {
+    Window,
+    Document,
 }
 
-impl<Msg> EventListener<Msg> {
-    pub fn match_parent_elements(mut self) -> Self {
-        match self.event {
-            Event::Click(ref mut event) => {
-                event.match_parent_elements = true;
-            }
-            Event::Input(ref mut event) => {
-                event.match_parent_elements = true;
-            }
-            Event::Change(ref mut event) => {
-                event.match_parent_elements = true;
-            }
-            Event::Keyup(ref _event) => {}
-        }
+#[derive(Clone, serde::Serialize, serde::Deserialize)]
+#[serde(tag = "type", content = "config")]
+#[serde(rename_all = "camelCase")]
+pub enum EventMatcher {
+    ExactSelector { selector: Selector },
+    ClosestSelector { selector: Selector },
+    KeyboardKey { key: Key },
+    KeyboardCombo { combo: KeyboardCombo },
+}
 
-        self
-    }
+#[derive(Clone, serde::Serialize, serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct EventListener<Msg> {
+    pub id: String,
+    pub listen_target: ListenTarget,
+    pub listen_event: EventType,
+    pub matchers: Vec<EventMatcher>,
+    pub msg: Msg,
+    pub propagation: EventPropagation,
+    pub queue_strategy: QueueStrategy,
 }
 
 pub fn on_click<Msg>(id: &DomId, msg: Msg) -> EventListener<Msg> {
     EventListener {
-        id: id.clone(),
-        selector: id.selector(),
-        event: Event::Click(EventConfig {
+        id: id.to_string(),
+        listen_target: ListenTarget::Document,
+        matchers: vec![EventMatcher::ExactSelector {
+            selector: id.selector(),
+        }],
+        listen_event: EventType::Click,
+        msg,
+        propagation: EventPropagation {
             stop_propagation: true,
             prevent_default: true,
-            match_parent_elements: false,
-        }),
+        },
+        queue_strategy: QueueStrategy::Fifo,
+    }
+}
+
+pub fn on_click_closest<Msg>(id: &DomId, msg: Msg) -> EventListener<Msg> {
+    EventListener {
+        id: id.to_string(),
+        listen_target: ListenTarget::Document,
+        matchers: vec![EventMatcher::ClosestSelector {
+            selector: id.selector(),
+        }],
+        listen_event: EventType::Click,
         msg,
+        propagation: EventPropagation {
+            stop_propagation: true,
+            prevent_default: true,
+        },
         queue_strategy: QueueStrategy::Fifo,
     }
 }
 
 pub fn on_input<Msg>(id: &DomId, msg: Msg) -> EventListener<Msg> {
-    let selector = id.selector();
-
     EventListener {
-        id: id.clone(),
-        selector: selector,
-        event: Event::Input(EventConfig {
+        id: id.to_string(),
+        listen_target: ListenTarget::Document,
+        matchers: vec![EventMatcher::ExactSelector {
+            selector: id.selector(),
+        }],
+        listen_event: EventType::Input,
+        msg: msg,
+        propagation: EventPropagation {
             stop_propagation: true,
             prevent_default: true,
-            match_parent_elements: false,
-        }),
-        msg: msg,
+        },
         queue_strategy: QueueStrategy::DropOlder,
     }
 }
 
 pub fn on_change<Msg>(id: &DomId, msg: Msg) -> EventListener<Msg> {
-    let selector = id.selector();
-
     EventListener {
-        id: id.clone(),
-        selector: selector,
-        event: Event::Change(EventConfig {
+        id: id.to_string(),
+        listen_target: ListenTarget::Document,
+        matchers: vec![EventMatcher::ExactSelector {
+            selector: id.selector(),
+        }],
+        listen_event: EventType::Change,
+        msg: msg,
+        propagation: EventPropagation {
             stop_propagation: true,
             prevent_default: true,
-            match_parent_elements: false,
-        }),
-        msg: msg,
+        },
         queue_strategy: QueueStrategy::DropOlder,
     }
 }
 
 pub fn on_keyup<Msg>(id: &DomId, msg: Msg) -> EventListener<Msg> {
-    let selector = id.selector();
-
     EventListener {
-        id: id.clone(),
-        selector: selector,
-        event: Event::Keyup(KeyboardEventConfig {
-            key: Key::Any,
-            alt_key: false,
-            ctrl_key: false,
-            meta_key: false,
-            shift_key: false,
-            debounce: DebounceConfig {
-                delay: 150,
-                leading: true,
-                trailing: true,
-            },
-            event: EventConfig {
-                stop_propagation: true,
-                prevent_default: true,
-                match_parent_elements: false,
-            },
-        }),
+        id: id.to_string(),
+        listen_target: ListenTarget::Document,
+        listen_event: EventType::Keyup,
+        matchers: vec![EventMatcher::ExactSelector {
+            selector: id.selector(),
+        }],
         msg,
+        propagation: EventPropagation {
+            stop_propagation: true,
+            prevent_default: true,
+        },
         queue_strategy: QueueStrategy::DropOlder,
     }
 }
