@@ -45,7 +45,7 @@ where
 {
     let msg = decode_msg(js_msg)?;
     let mut model = decode_model(js_model)?;
-    page.update(&msg, &mut model);
+    page.update(&msg, &mut model)?;
 
     encode_model(&model)
 }

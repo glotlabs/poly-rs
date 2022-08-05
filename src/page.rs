@@ -30,6 +30,6 @@ pub trait Page<Model, Msg> {
     fn id(&self) -> dom::DomId;
     fn initial_model(&self) -> Model;
     fn logic(&self, model: &Model) -> dom::Logic<Msg>;
-    fn update(&self, msg: &Msg, model: &mut Model);
+    fn update(&self, msg: &Msg, model: &mut Model) -> Result<(), String>;
     fn view(&self, model: &Model) -> PageMarkup;
 }
