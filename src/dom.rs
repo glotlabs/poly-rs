@@ -1,62 +1,28 @@
+use serde_json::json;
 use std::fmt;
-use std::str::FromStr;
 
-pub const CAPTURE_VALUE: &'static str = ":VALUE";
+// TODO: create enum?
 pub const VALUE_FROM_ID: &'static str = "VALUE_FROM_ID";
 
-#[derive(Clone, Default, serde::Deserialize)]
-pub struct Value(String);
+#[derive(Clone, serde::Deserialize, serde::Serialize)]
+pub struct Value(serde_json::Value);
 
 impl Value {
-    pub fn parse<T>(&self) -> Result<T, T::Err>
+    pub fn parse<T>(&self) -> Result<T, serde_json::Error>
     where
-        T: FromStr,
-        T::Err: fmt::Display,
+        T: serde::de::DeserializeOwned,
     {
-        self.0.parse::<T>()
+        serde_json::from_value(self.0.clone())
     }
 
     pub fn from_id(id: &DomId) -> Value {
-        Value(format!("{}:{}", VALUE_FROM_ID, id))
+        Value(json!(format!("{}:{}", VALUE_FROM_ID, id)))
     }
 }
 
 impl fmt::Display for Value {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.0)
-    }
-}
-
-impl serde::Serialize for Value {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        serializer.serialize_str(&self.0)
-    }
-}
-
-#[derive(Clone, Default, serde::Deserialize)]
-pub struct JsValue {
-    pub kind: String,
-    pub value: serde_json::Value,
-}
-
-impl JsValue {
-    pub fn from_value<T>(self) -> Result<T, serde_json::Error>
-    where
-        T: serde::de::DeserializeOwned,
-    {
-        serde_json::from_value(self.value)
-    }
-}
-
-impl serde::Serialize for JsValue {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        serializer.serialize_str(CAPTURE_VALUE)
     }
 }
 
