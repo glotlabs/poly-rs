@@ -119,6 +119,16 @@ pub enum Key {
     Key(String),
 }
 
+impl fmt::Display for Key {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Key::Any => write!(f, "any"),
+            Key::Escape => write!(f, "escape"),
+            Key::Key(key) => write!(f, "{}", key),
+        }
+    }
+}
+
 #[derive(Clone, serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct DebounceConfig {
@@ -239,6 +249,21 @@ pub fn on_keyup<Msg>(id: &DomId, msg: Msg) -> EventListener<Msg> {
         matchers: vec![EventMatcher::ExactSelector {
             selector: id.selector(),
         }],
+        msg,
+        propagation: EventPropagation {
+            stop_propagation: true,
+            prevent_default: true,
+        },
+        queue_strategy: QueueStrategy::DropOlder,
+    }
+}
+
+pub fn on_keyup_global<Msg>(key: Key, msg: Msg) -> EventListener<Msg> {
+    EventListener {
+        id: format!("keyboard-key-{}", key),
+        listen_target: ListenTarget::Document,
+        event_type: EventType::Keyup,
+        matchers: vec![EventMatcher::KeyboardKey { key: key }],
         msg,
         propagation: EventPropagation {
             stop_propagation: true,
