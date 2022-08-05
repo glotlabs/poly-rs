@@ -22,13 +22,13 @@ impl Value {
         serde_json::from_value(self.0.clone())
     }
 
-    pub fn from_id(id: &DomId) -> Value {
+    pub fn capture_from_element(id: &DomId) -> Value {
         to_value(CaptureType::ValueFromElement {
             element_id: id.clone(),
         })
     }
 
-    pub fn window_size() -> Value {
+    pub fn capture_window_size() -> Value {
         to_value(CaptureType::WindowSize)
     }
 }
@@ -78,6 +78,7 @@ pub enum EventType {
     Input,
     Change,
     Keyup,
+    Resize,
 }
 
 #[derive(Clone, serde::Serialize, serde::Deserialize)]
@@ -245,8 +246,26 @@ pub fn on_keyup_global<Msg>(key: Key, msg: Msg) -> EventListener<Msg> {
         matchers: vec![EventMatcher::KeyboardKey { key: key }],
         msg,
         propagation: EventPropagation {
-            stop_propagation: true,
-            prevent_default: true,
+            stop_propagation: false,
+            prevent_default: false,
+        },
+        queue_strategy: QueueStrategy::DropOlder,
+    }
+}
+
+pub fn on_window_resize<Msg, ToMsg>(to_msg: ToMsg) -> EventListener<Msg>
+where
+    ToMsg: FnOnce(Value) -> Msg,
+{
+    EventListener {
+        id: "window-resize".to_string(),
+        listen_target: ListenTarget::Window,
+        event_type: EventType::Resize,
+        matchers: vec![],
+        msg: to_msg(Value::capture_window_size()),
+        propagation: EventPropagation {
+            stop_propagation: false,
+            prevent_default: false,
         },
         queue_strategy: QueueStrategy::DropOlder,
     }
