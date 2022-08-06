@@ -1,4 +1,4 @@
-use crate::dom::dom_id::DomId;
+use crate::browser::dom_id::DomId;
 use std::fmt;
 
 #[derive(Clone, serde::Deserialize, serde::Serialize)]

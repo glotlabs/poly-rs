@@ -1,4 +1,4 @@
-use crate::dom::selector::Selector;
+use crate::browser::selector::Selector;
 use std::fmt;
 
 #[derive(Clone, serde::Serialize, serde::Deserialize)]

@@ -1,2 +1,2 @@
-pub mod dom;
+pub mod browser;
 pub mod page;

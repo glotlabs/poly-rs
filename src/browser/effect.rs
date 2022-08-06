@@ -1,5 +1,5 @@
-use crate::dom::EventListener;
-use crate::dom::Interval;
+use crate::browser::EventListener;
+use crate::browser::Interval;
 
 pub type Effects<Msg> = Vec<Effect<Msg>>;
 
@@ -10,4 +10,8 @@ pub enum Effect<Msg> {
     None,
     EventListener(EventListener<Msg>),
     Interval(Interval<Msg>),
+}
+
+pub fn no_effect<Msg>() -> Effect<Msg> {
+    Effect::None
 }

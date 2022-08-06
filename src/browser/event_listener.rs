@@ -1,10 +1,10 @@
-use crate::dom::dom_id::DomId;
-use crate::dom::keyboard::Key;
-use crate::dom::keyboard::KeyCombo;
-use crate::dom::queue_strategy::QueueStrategy;
-use crate::dom::selector::Selector;
-use crate::dom::value::Value;
-use crate::dom::Effect;
+use crate::browser::dom_id::DomId;
+use crate::browser::keyboard::Key;
+use crate::browser::keyboard::KeyCombo;
+use crate::browser::queue_strategy::QueueStrategy;
+use crate::browser::selector::Selector;
+use crate::browser::value::Value;
+use crate::browser::Effect;
 
 #[derive(Clone, serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "camelCase")]

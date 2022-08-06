@@ -1,5 +1,5 @@
-use crate::dom::dom_id::DomId;
-use crate::dom::queue_strategy::QueueStrategy;
+use crate::browser::dom_id::DomId;
+use crate::browser::queue_strategy::QueueStrategy;
 
 #[derive(Clone, serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
