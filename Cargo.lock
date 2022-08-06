@@ -57,7 +57,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "orro"
+name = "polyester"
 version = "0.1.0"
 dependencies = [
  "maud",
