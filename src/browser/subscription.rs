@@ -1,17 +1,17 @@
 use crate::browser::EventListener;
 use crate::browser::Interval;
 
-pub type Effects<Msg> = Vec<Effect<Msg>>;
+pub type Subscriptions<Msg> = Vec<Subscription<Msg>>;
 
 #[derive(Clone, serde::Serialize, serde::Deserialize)]
 #[serde(tag = "type", content = "config")]
 #[serde(rename_all = "camelCase")]
-pub enum Effect<Msg> {
+pub enum Subscription<Msg> {
     None,
     EventListener(EventListener<Msg>),
     Interval(Interval<Msg>),
 }
 
-pub fn no_effect<Msg>() -> Effect<Msg> {
-    Effect::None
+pub fn no_subscription<Msg>() -> Subscription<Msg> {
+    Subscription::None
 }

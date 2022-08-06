@@ -4,7 +4,7 @@ use crate::browser::keyboard::KeyCombo;
 use crate::browser::queue_strategy::QueueStrategy;
 use crate::browser::selector::Selector;
 use crate::browser::value::Value;
-use crate::browser::Effect;
+use crate::browser::Subscription;
 
 #[derive(Clone, serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -35,8 +35,8 @@ pub struct EventListener<Msg> {
     pub queue_strategy: QueueStrategy,
 }
 
-pub fn on_click<Msg>(id: &DomId, msg: Msg) -> Effect<Msg> {
-    Effect::EventListener(EventListener {
+pub fn on_click<Msg>(id: &DomId, msg: Msg) -> Subscription<Msg> {
+    Subscription::EventListener(EventListener {
         id: id.to_string(),
         listen_target: ListenTarget::Document,
         matchers: vec![EventMatcher::ExactSelector {
@@ -52,8 +52,8 @@ pub fn on_click<Msg>(id: &DomId, msg: Msg) -> Effect<Msg> {
     })
 }
 
-pub fn on_click_closest<Msg>(id: &DomId, msg: Msg) -> Effect<Msg> {
-    Effect::EventListener(EventListener {
+pub fn on_click_closest<Msg>(id: &DomId, msg: Msg) -> Subscription<Msg> {
+    Subscription::EventListener(EventListener {
         id: id.to_string(),
         listen_target: ListenTarget::Document,
         matchers: vec![EventMatcher::ClosestSelector {
@@ -69,8 +69,8 @@ pub fn on_click_closest<Msg>(id: &DomId, msg: Msg) -> Effect<Msg> {
     })
 }
 
-pub fn on_input<Msg>(id: &DomId, msg: Msg) -> Effect<Msg> {
-    Effect::EventListener(EventListener {
+pub fn on_input<Msg>(id: &DomId, msg: Msg) -> Subscription<Msg> {
+    Subscription::EventListener(EventListener {
         id: id.to_string(),
         listen_target: ListenTarget::Document,
         matchers: vec![EventMatcher::ExactSelector {
@@ -86,8 +86,8 @@ pub fn on_input<Msg>(id: &DomId, msg: Msg) -> Effect<Msg> {
     })
 }
 
-pub fn on_change<Msg>(id: &DomId, msg: Msg) -> Effect<Msg> {
-    Effect::EventListener(EventListener {
+pub fn on_change<Msg>(id: &DomId, msg: Msg) -> Subscription<Msg> {
+    Subscription::EventListener(EventListener {
         id: id.to_string(),
         listen_target: ListenTarget::Document,
         matchers: vec![EventMatcher::ExactSelector {
@@ -103,8 +103,8 @@ pub fn on_change<Msg>(id: &DomId, msg: Msg) -> Effect<Msg> {
     })
 }
 
-pub fn on_keyup<Msg>(id: &DomId, msg: Msg) -> Effect<Msg> {
-    Effect::EventListener(EventListener {
+pub fn on_keyup<Msg>(id: &DomId, msg: Msg) -> Subscription<Msg> {
+    Subscription::EventListener(EventListener {
         id: id.to_string(),
         listen_target: ListenTarget::Document,
         event_type: EventType::Keyup,
@@ -120,8 +120,8 @@ pub fn on_keyup<Msg>(id: &DomId, msg: Msg) -> Effect<Msg> {
     })
 }
 
-pub fn on_keyup_global<Msg>(key: Key, msg: Msg) -> Effect<Msg> {
-    Effect::EventListener(EventListener {
+pub fn on_keyup_global<Msg>(key: Key, msg: Msg) -> Subscription<Msg> {
+    Subscription::EventListener(EventListener {
         id: format!("keyboard-key-{}", key),
         listen_target: ListenTarget::Document,
         event_type: EventType::Keyup,
@@ -135,11 +135,11 @@ pub fn on_keyup_global<Msg>(key: Key, msg: Msg) -> Effect<Msg> {
     })
 }
 
-pub fn on_window_resize<Msg, ToMsg>(to_msg: ToMsg) -> Effect<Msg>
+pub fn on_window_resize<Msg, ToMsg>(to_msg: ToMsg) -> Subscription<Msg>
 where
     ToMsg: FnOnce(Value) -> Msg,
 {
-    Effect::EventListener(EventListener {
+    Subscription::EventListener(EventListener {
         id: "window-resize".to_string(),
         listen_target: ListenTarget::Window,
         event_type: EventType::Resize,

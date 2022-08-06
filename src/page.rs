@@ -29,7 +29,7 @@ impl PageMarkup {
 pub trait Page<Model, Msg> {
     fn id(&self) -> browser::DomId;
     fn initial_model(&self) -> Model;
-    fn effects(&self, model: &Model) -> browser::Effects<Msg>;
+    fn subscriptions(&self, model: &Model) -> browser::Subscriptions<Msg>;
     fn update(&self, msg: &Msg, model: &mut Model) -> Result<(), String>;
     fn view(&self, model: &Model) -> PageMarkup;
 }
