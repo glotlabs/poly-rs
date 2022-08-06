@@ -4,6 +4,7 @@ use crate::dom::keyboard::KeyCombo;
 use crate::dom::queue_strategy::QueueStrategy;
 use crate::dom::selector::Selector;
 use crate::dom::value::Value;
+use crate::dom::Effect;
 
 #[derive(Clone, serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -34,8 +35,8 @@ pub struct EventListener<Msg> {
     pub queue_strategy: QueueStrategy,
 }
 
-pub fn on_click<Msg>(id: &DomId, msg: Msg) -> EventListener<Msg> {
-    EventListener {
+pub fn on_click<Msg>(id: &DomId, msg: Msg) -> Effect<Msg> {
+    Effect::EventListener(EventListener {
         id: id.to_string(),
         listen_target: ListenTarget::Document,
         matchers: vec![EventMatcher::ExactSelector {
@@ -48,11 +49,11 @@ pub fn on_click<Msg>(id: &DomId, msg: Msg) -> EventListener<Msg> {
             prevent_default: true,
         },
         queue_strategy: QueueStrategy::Fifo,
-    }
+    })
 }
 
-pub fn on_click_closest<Msg>(id: &DomId, msg: Msg) -> EventListener<Msg> {
-    EventListener {
+pub fn on_click_closest<Msg>(id: &DomId, msg: Msg) -> Effect<Msg> {
+    Effect::EventListener(EventListener {
         id: id.to_string(),
         listen_target: ListenTarget::Document,
         matchers: vec![EventMatcher::ClosestSelector {
@@ -65,11 +66,11 @@ pub fn on_click_closest<Msg>(id: &DomId, msg: Msg) -> EventListener<Msg> {
             prevent_default: true,
         },
         queue_strategy: QueueStrategy::Fifo,
-    }
+    })
 }
 
-pub fn on_input<Msg>(id: &DomId, msg: Msg) -> EventListener<Msg> {
-    EventListener {
+pub fn on_input<Msg>(id: &DomId, msg: Msg) -> Effect<Msg> {
+    Effect::EventListener(EventListener {
         id: id.to_string(),
         listen_target: ListenTarget::Document,
         matchers: vec![EventMatcher::ExactSelector {
@@ -82,11 +83,11 @@ pub fn on_input<Msg>(id: &DomId, msg: Msg) -> EventListener<Msg> {
             prevent_default: true,
         },
         queue_strategy: QueueStrategy::DropOlder,
-    }
+    })
 }
 
-pub fn on_change<Msg>(id: &DomId, msg: Msg) -> EventListener<Msg> {
-    EventListener {
+pub fn on_change<Msg>(id: &DomId, msg: Msg) -> Effect<Msg> {
+    Effect::EventListener(EventListener {
         id: id.to_string(),
         listen_target: ListenTarget::Document,
         matchers: vec![EventMatcher::ExactSelector {
@@ -99,11 +100,11 @@ pub fn on_change<Msg>(id: &DomId, msg: Msg) -> EventListener<Msg> {
             prevent_default: true,
         },
         queue_strategy: QueueStrategy::DropOlder,
-    }
+    })
 }
 
-pub fn on_keyup<Msg>(id: &DomId, msg: Msg) -> EventListener<Msg> {
-    EventListener {
+pub fn on_keyup<Msg>(id: &DomId, msg: Msg) -> Effect<Msg> {
+    Effect::EventListener(EventListener {
         id: id.to_string(),
         listen_target: ListenTarget::Document,
         event_type: EventType::Keyup,
@@ -116,11 +117,11 @@ pub fn on_keyup<Msg>(id: &DomId, msg: Msg) -> EventListener<Msg> {
             prevent_default: true,
         },
         queue_strategy: QueueStrategy::DropOlder,
-    }
+    })
 }
 
-pub fn on_keyup_global<Msg>(key: Key, msg: Msg) -> EventListener<Msg> {
-    EventListener {
+pub fn on_keyup_global<Msg>(key: Key, msg: Msg) -> Effect<Msg> {
+    Effect::EventListener(EventListener {
         id: format!("keyboard-key-{}", key),
         listen_target: ListenTarget::Document,
         event_type: EventType::Keyup,
@@ -131,14 +132,14 @@ pub fn on_keyup_global<Msg>(key: Key, msg: Msg) -> EventListener<Msg> {
             prevent_default: false,
         },
         queue_strategy: QueueStrategy::DropOlder,
-    }
+    })
 }
 
-pub fn on_window_resize<Msg, ToMsg>(to_msg: ToMsg) -> EventListener<Msg>
+pub fn on_window_resize<Msg, ToMsg>(to_msg: ToMsg) -> Effect<Msg>
 where
     ToMsg: FnOnce(Value) -> Msg,
 {
-    EventListener {
+    Effect::EventListener(EventListener {
         id: "window-resize".to_string(),
         listen_target: ListenTarget::Window,
         event_type: EventType::Resize,
@@ -149,7 +150,7 @@ where
             prevent_default: false,
         },
         queue_strategy: QueueStrategy::DropOlder,
-    }
+    })
 }
 
 #[derive(Clone, serde::Serialize, serde::Deserialize)]

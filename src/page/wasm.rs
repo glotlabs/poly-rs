@@ -21,15 +21,15 @@ where
     return Ok(page_markup.body.into_string());
 }
 
-pub fn get_logic<P, Model, Msg>(page: &P, js_model: &JsValue) -> Result<JsValue, JsValue>
+pub fn get_effects<P, Model, Msg>(page: &P, js_model: &JsValue) -> Result<JsValue, JsValue>
 where
     P: Page<Model, Msg>,
     Model: serde::de::DeserializeOwned,
     Msg: serde::Serialize,
 {
     let model = decode_model(js_model)?;
-    let logic = page.logic(&model);
-    encode_logic(&logic)
+    let effects = page.effects(&model);
+    encode_effects(&effects)
 }
 
 pub fn update<P, Model, Msg>(
@@ -57,11 +57,11 @@ where
     JsValue::from_serde(&model).map_err(|err| format!("Failed to encode model: {}", err).into())
 }
 
-fn encode_logic<Logic>(logic: Logic) -> Result<JsValue, JsValue>
+fn encode_effects<Effects>(effects: Effects) -> Result<JsValue, JsValue>
 where
-    Logic: serde::Serialize,
+    Effects: serde::Serialize,
 {
-    JsValue::from_serde(&logic).map_err(|err| format!("Failed to encode logic: {}", err).into())
+    JsValue::from_serde(&effects).map_err(|err| format!("Failed to encode effects: {}", err).into())
 }
 
 fn decode_model<Model>(js_model: &JsValue) -> Result<Model, JsValue>
