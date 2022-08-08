@@ -1,6 +1,8 @@
 pub mod wasm;
 
-use crate::browser;
+use crate::browser::DomId;
+use crate::browser::Effects;
+use crate::browser::Subscriptions;
 use maud::html;
 use maud::Markup;
 
@@ -27,9 +29,9 @@ impl PageMarkup {
 }
 
 pub trait Page<Model, Msg> {
-    fn id(&self) -> browser::DomId;
-    fn initial_model(&self) -> Model;
-    fn subscriptions(&self, model: &Model) -> browser::Subscriptions<Msg>;
-    fn update(&self, msg: &Msg, model: &mut Model) -> Result<(), String>;
+    fn id(&self) -> DomId;
+    fn init(&self) -> (Model, Effects<Msg>);
+    fn subscriptions(&self, model: &Model) -> Subscriptions<Msg>;
+    fn update(&self, msg: &Msg, model: &mut Model) -> Result<Effects<Msg>, String>;
     fn view(&self, model: &Model) -> PageMarkup;
 }
