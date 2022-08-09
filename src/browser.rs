@@ -1,9 +1,6 @@
 pub mod dom_id;
 pub mod effect;
-pub mod event_listener;
-pub mod interval;
 pub mod keyboard;
-pub mod navigation;
 pub mod queue_strategy;
 pub mod selector;
 pub mod subscription;

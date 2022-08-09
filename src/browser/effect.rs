@@ -1,4 +1,6 @@
-use crate::browser::navigation::Navigation;
+pub mod navigation;
+
+use crate::browser::effect::navigation::*;
 
 pub type Effects<Msg, CustomEffect> = Vec<Effect<Msg, CustomEffect>>;
 

@@ -1,5 +1,8 @@
-use crate::browser::EventListener;
-use crate::browser::Interval;
+pub mod event_listener;
+pub mod interval;
+
+use crate::browser::subscription::event_listener::*;
+use crate::browser::subscription::interval::*;
 
 pub type Subscriptions<Msg> = Vec<Subscription<Msg>>;
 
