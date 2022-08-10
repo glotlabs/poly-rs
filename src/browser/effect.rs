@@ -1,5 +1,7 @@
+pub mod local_storage;
 pub mod navigation;
 
+use crate::browser::effect::local_storage::*;
 use crate::browser::effect::navigation::*;
 
 pub type Effects<Msg, CustomEffect> = Vec<Effect<Msg, CustomEffect>>;
@@ -11,7 +13,7 @@ pub enum Effect<Msg, CustomEffect> {
     None,
     Navigation(Navigation),
     Custom(CustomEffect),
-    Dummy(Msg),
+    LocalStorage(LocalStorage<Msg>),
 }
 
 pub fn no_effect<Msg, CustomEffect>() -> Effect<Msg, CustomEffect> {

@@ -18,6 +18,12 @@ impl Value {
         })
     }
 
+    pub fn capture_from_local_storage(key: &str) -> Value {
+        to_value(CaptureType::ValueFromLocalStorage {
+            key: key.to_string(),
+        })
+    }
+
     pub fn capture_window_size() -> Value {
         to_value(CaptureType::WindowSize)
     }
@@ -37,10 +43,13 @@ pub enum CaptureType {
     ValueFromElement {
         element_id: DomId,
     },
+    ValueFromLocalStorage {
+        key: String,
+    },
     WindowSize,
 }
 
-fn to_value<T>(value: T) -> Value
+pub fn to_value<T>(value: T) -> Value
 where
     T: serde::Serialize,
 {
