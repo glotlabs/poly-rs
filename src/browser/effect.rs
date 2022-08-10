@@ -16,8 +16,12 @@ pub enum Effect<Msg, CustomEffect> {
     LocalStorage(LocalStorage<Msg>),
 }
 
-pub fn no_effect<Msg, CustomEffect>() -> Effect<Msg, CustomEffect> {
+pub fn none<Msg, CustomEffect>() -> Effect<Msg, CustomEffect> {
     Effect::None
+}
+
+pub fn no_effects<Msg, CustomEffect>() -> Result<Effects<Msg, CustomEffect>, String> {
+    Ok(vec![none()])
 }
 
 pub fn custom_effect<Msg, CustomEffect>(effect: CustomEffect) -> Effect<Msg, CustomEffect> {
