@@ -15,6 +15,13 @@ impl Value {
     pub fn capture_from_element(id: &DomId) -> Value {
         to_value(CaptureType::ValueFromElement {
             element_id: id.clone(),
+            parse_as_json: true,
+        })
+    }
+    pub fn capture_string_from_element(id: &DomId) -> Value {
+        to_value(CaptureType::ValueFromElement {
+            element_id: id.clone(),
+            parse_as_json: false,
         })
     }
 
@@ -42,6 +49,7 @@ pub enum CaptureType {
     #[serde(rename_all = "camelCase")]
     ValueFromElement {
         element_id: DomId,
+        parse_as_json: bool,
     },
     ValueFromLocalStorage {
         key: String,
