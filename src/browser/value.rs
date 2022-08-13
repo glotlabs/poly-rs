@@ -31,6 +31,10 @@ impl Value {
         })
     }
 
+    pub fn capture_current_time() -> Value {
+        to_value(CaptureType::CurrentTime)
+    }
+
     pub fn capture_window_size() -> Value {
         to_value(CaptureType::WindowSize)
     }
@@ -54,6 +58,7 @@ pub enum CaptureType {
     ValueFromLocalStorage {
         key: String,
     },
+    CurrentTime,
     WindowSize,
 }
 
