@@ -1,7 +1,6 @@
 use crate::browser::dom_id::DomId;
 use crate::browser::keyboard::Key;
 use crate::browser::keyboard::KeyCombo;
-use crate::browser::queue_strategy::QueueStrategy;
 use crate::browser::selector::Selector;
 use crate::browser::Subscription;
 use crate::browser::SubscriptionMsg;
@@ -32,7 +31,6 @@ pub struct EventListener<Msg, CustomEffect> {
     pub matchers: Vec<EventMatcher>,
     pub msg: SubscriptionMsg<Msg, CustomEffect>,
     pub propagation: EventPropagation,
-    pub queue_strategy: QueueStrategy,
 }
 
 pub fn on_click<Msg, CustomEffect>(
@@ -51,7 +49,6 @@ pub fn on_click<Msg, CustomEffect>(
             stop_propagation: true,
             prevent_default: true,
         },
-        queue_strategy: QueueStrategy::Fifo,
     })
 }
 
@@ -71,7 +68,6 @@ pub fn on_click_closest<Msg, CustomEffect>(
             stop_propagation: true,
             prevent_default: true,
         },
-        queue_strategy: QueueStrategy::Fifo,
     })
 }
 
@@ -91,7 +87,6 @@ pub fn on_input<Msg, CustomEffect>(
             stop_propagation: true,
             prevent_default: true,
         },
-        queue_strategy: QueueStrategy::DropOlder,
     })
 }
 
@@ -111,7 +106,6 @@ pub fn on_change<Msg, CustomEffect>(
             stop_propagation: true,
             prevent_default: true,
         },
-        queue_strategy: QueueStrategy::DropOlder,
     })
 }
 
@@ -131,7 +125,6 @@ pub fn on_keyup<Msg, CustomEffect>(
             stop_propagation: true,
             prevent_default: true,
         },
-        queue_strategy: QueueStrategy::DropOlder,
     })
 }
 
@@ -149,7 +142,6 @@ pub fn on_keyup_global<Msg, CustomEffect>(
             stop_propagation: false,
             prevent_default: false,
         },
-        queue_strategy: QueueStrategy::DropOlder,
     })
 }
 
@@ -166,7 +158,6 @@ pub fn on_window_resize<Msg, CustomEffect>(
             stop_propagation: false,
             prevent_default: false,
         },
-        queue_strategy: QueueStrategy::DropOlder,
     })
 }
 
