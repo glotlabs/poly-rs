@@ -31,7 +31,7 @@ impl PageMarkup {
 pub trait Page<Model, Msg, CustomEffect> {
     fn id(&self) -> DomId;
     fn init(&self) -> (Model, Effects<Msg, CustomEffect>);
-    fn subscriptions(&self, model: &Model) -> Subscriptions<Msg>;
+    fn subscriptions(&self, model: &Model) -> Subscriptions<Msg, CustomEffect>;
     fn update(&self, msg: &Msg, model: &mut Model) -> Result<Effects<Msg, CustomEffect>, String>;
     fn view(&self, model: &Model) -> PageMarkup;
 }

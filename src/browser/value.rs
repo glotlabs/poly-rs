@@ -1,4 +1,3 @@
-use crate::browser::dom_id::DomId;
 use std::fmt;
 
 #[derive(Clone, serde::Deserialize, serde::Serialize)]
@@ -12,31 +11,8 @@ impl Value {
         serde_json::from_value(self.0.clone())
     }
 
-    pub fn capture_from_element(id: &DomId) -> Value {
-        to_value(CaptureType::ValueFromElement {
-            element_id: id.clone(),
-            parse_as_json: true,
-        })
-    }
-    pub fn capture_string_from_element(id: &DomId) -> Value {
-        to_value(CaptureType::ValueFromElement {
-            element_id: id.clone(),
-            parse_as_json: false,
-        })
-    }
-
-    pub fn capture_from_local_storage(key: &str) -> Value {
-        to_value(CaptureType::ValueFromLocalStorage {
-            key: key.to_string(),
-        })
-    }
-
-    pub fn capture_current_time() -> Value {
-        to_value(CaptureType::CurrentTime)
-    }
-
-    pub fn capture_window_size() -> Value {
-        to_value(CaptureType::WindowSize)
+    pub fn empty() -> Value {
+        Value(serde_json::Value::Null)
     }
 }
 
@@ -44,22 +20,6 @@ impl fmt::Display for Value {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.0)
     }
-}
-
-#[derive(Clone, serde::Deserialize, serde::Serialize)]
-#[serde(tag = "type", content = "config")]
-#[serde(rename_all = "camelCase")]
-pub enum CaptureType {
-    #[serde(rename_all = "camelCase")]
-    ValueFromElement {
-        element_id: DomId,
-        parse_as_json: bool,
-    },
-    ValueFromLocalStorage {
-        key: String,
-    },
-    CurrentTime,
-    WindowSize,
 }
 
 pub fn to_value<T>(value: T) -> Value

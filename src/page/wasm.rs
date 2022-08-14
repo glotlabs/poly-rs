@@ -35,6 +35,7 @@ where
     P: Page<Model, Msg, CustomEffect>,
     Model: serde::de::DeserializeOwned,
     Msg: serde::Serialize,
+    CustomEffect: serde::Serialize,
 {
     let model = decode_model(js_model)?;
     let subscriptions = page.subscriptions(&model);
@@ -99,7 +100,7 @@ where
         .map_err(|err| format!("Failed to decode msg: {}", err).into())
 }
 
-#[derive(Clone, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, serde::Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ModelAndEffects<Model, Msg, CustomEffect> {
     pub model: Model,
