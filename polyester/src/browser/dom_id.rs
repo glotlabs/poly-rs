@@ -25,3 +25,7 @@ impl fmt::Display for DomId {
         write!(f, "{}", self.0)
     }
 }
+
+pub trait ToDomId {
+    fn to_dom_id(&self) -> DomId;
+}
