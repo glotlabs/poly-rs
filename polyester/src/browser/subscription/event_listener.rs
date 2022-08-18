@@ -182,7 +182,7 @@ pub fn on_keyup_document<Msg, CustomEffect>(key: Key, msg: Msg) -> Subscription<
         id: format!("keyboard-key-{}", key),
         listen_target: ListenTarget::Document,
         event_type: EventType::Keyup,
-        matchers: vec![EventMatcher::KeyboardKey { key: key }],
+        matchers: vec![EventMatcher::KeyboardKey { key }],
         msg: SubscriptionMsg::pure(msg),
         propagation: EventPropagation {
             stop_propagation: false,

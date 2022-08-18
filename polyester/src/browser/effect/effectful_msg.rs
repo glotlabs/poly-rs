@@ -11,8 +11,5 @@ pub fn effectful_msg<Msg, CustomEffect>(
     msg: Msg,
     effect: Effect<Msg, CustomEffect>,
 ) -> Effect<Msg, CustomEffect> {
-    Effect::EffectfulMsg(Box::new(EffectfulMsg {
-        msg: msg,
-        effect: effect,
-    }))
+    Effect::EffectfulMsg(Box::new(EffectfulMsg { msg, effect }))
 }

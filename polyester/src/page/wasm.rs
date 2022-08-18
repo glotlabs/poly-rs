@@ -24,7 +24,7 @@ where
     let model = decode_model(js_model)?;
     let page_markup = page.view(&model);
 
-    return Ok(page_markup.body.into_string());
+    Ok(page_markup.body.into_string())
 }
 
 pub fn get_subscriptions<P, Model, Msg, CustomEffect>(
