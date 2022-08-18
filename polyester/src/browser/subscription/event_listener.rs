@@ -136,10 +136,13 @@ where
     })
 }
 
-pub fn on_keyup_element<Msg, CustomEffect>(
+pub fn on_keyup_element<Msg, CustomEffect, ToMsg>(
     id: &DomId,
-    msg: SubscriptionMsg<Msg, CustomEffect>,
-) -> Subscription<Msg, CustomEffect> {
+    to_msg: ToMsg,
+) -> Subscription<Msg, CustomEffect>
+where
+    ToMsg: Fn(String) -> Msg,
+{
     Subscription::EventListener(EventListener {
         id: id.to_string(),
         listen_target: ListenTarget::Document,
@@ -147,7 +150,7 @@ pub fn on_keyup_element<Msg, CustomEffect>(
         matchers: vec![EventMatcher::ExactSelector {
             selector: id.selector(),
         }],
-        msg,
+        msg: SubscriptionMsg::effectful(to_msg, dom::get_element_string_value(id)),
         propagation: EventPropagation {
             stop_propagation: true,
             prevent_default: true,
@@ -155,16 +158,13 @@ pub fn on_keyup_element<Msg, CustomEffect>(
     })
 }
 
-pub fn on_keyup_document<Msg, CustomEffect>(
-    key: Key,
-    msg: SubscriptionMsg<Msg, CustomEffect>,
-) -> Subscription<Msg, CustomEffect> {
+pub fn on_keyup_document<Msg, CustomEffect>(key: Key, msg: Msg) -> Subscription<Msg, CustomEffect> {
     Subscription::EventListener(EventListener {
         id: format!("keyboard-key-{}", key),
         listen_target: ListenTarget::Document,
         event_type: EventType::Keyup,
         matchers: vec![EventMatcher::KeyboardKey { key: key }],
-        msg,
+        msg: SubscriptionMsg::pure(msg),
         propagation: EventPropagation {
             stop_propagation: false,
             prevent_default: false,
@@ -172,15 +172,16 @@ pub fn on_keyup_document<Msg, CustomEffect>(
     })
 }
 
-pub fn on_window_resize<Msg, CustomEffect>(
-    msg: SubscriptionMsg<Msg, CustomEffect>,
-) -> Subscription<Msg, CustomEffect> {
+pub fn on_window_resize<Msg, CustomEffect, ToMsg>(to_msg: ToMsg) -> Subscription<Msg, CustomEffect>
+where
+    ToMsg: Fn(Value) -> Msg,
+{
     Subscription::EventListener(EventListener {
         id: "window-resize".to_string(),
         listen_target: ListenTarget::Window,
         event_type: EventType::Resize,
         matchers: vec![],
-        msg,
+        msg: SubscriptionMsg::effectful(to_msg, dom::window_size()),
         propagation: EventPropagation {
             stop_propagation: false,
             prevent_default: false,
