@@ -10,8 +10,10 @@ impl Value {
     {
         serde_json::from_value(self.0.clone())
     }
+}
 
-    pub fn empty() -> Value {
+impl Default for Value {
+    fn default() -> Self {
         Value(serde_json::Value::Null)
     }
 }

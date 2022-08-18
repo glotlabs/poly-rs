@@ -15,7 +15,7 @@ pub fn get_item<Msg, CustomEffect, ToMsg>(key: &str, to_msg: ToMsg) -> Effect<Ms
 where
     ToMsg: Fn(Value) -> Msg,
 {
-    let msg = to_msg(Value::empty());
+    let msg = to_msg(Value::default());
     let effect = Effect::LocalStorage(LocalStorage::GetItem {
         key: key.to_string(),
     });

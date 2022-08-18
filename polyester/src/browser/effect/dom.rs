@@ -13,14 +13,14 @@ pub enum Dom {
     GetWindowSize,
 }
 
-pub fn element_value<Msg, CustomEffect>(dom_id: &DomId) -> Effect<Msg, CustomEffect> {
+pub fn get_element_json_value<Msg, CustomEffect>(dom_id: &DomId) -> Effect<Msg, CustomEffect> {
     Effect::Dom(Dom::GetElementValue {
         element_id: dom_id.clone(),
         parse_as_json: true,
     })
 }
 
-pub fn element_value_raw<Msg, CustomEffect>(dom_id: &DomId) -> Effect<Msg, CustomEffect> {
+pub fn get_element_string_value<Msg, CustomEffect>(dom_id: &DomId) -> Effect<Msg, CustomEffect> {
     Effect::Dom(Dom::GetElementValue {
         element_id: dom_id.clone(),
         parse_as_json: false,

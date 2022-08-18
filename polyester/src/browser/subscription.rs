@@ -4,7 +4,6 @@ pub mod interval;
 use crate::browser::subscription::event_listener::*;
 use crate::browser::subscription::interval::*;
 use crate::browser::Effect;
-use crate::browser::Value;
 
 pub type Subscriptions<Msg, CustomEffect> = Vec<Subscription<Msg, CustomEffect>>;
 
@@ -37,15 +36,16 @@ impl<Msg, CustomEffect> SubscriptionMsg<Msg, CustomEffect> {
         SubscriptionMsg::Pure(msg)
     }
 
-    pub fn effectful<ToMsg>(
+    pub fn effectful<ToMsg, T>(
         to_msg: ToMsg,
         effect: Effect<Msg, CustomEffect>,
     ) -> SubscriptionMsg<Msg, CustomEffect>
     where
-        ToMsg: Fn(Value) -> Msg,
+        ToMsg: Fn(T) -> Msg,
+        T: Default,
     {
         SubscriptionMsg::Effectful {
-            msg: to_msg(Value::empty()),
+            msg: to_msg(T::default()),
             effect,
         }
     }
