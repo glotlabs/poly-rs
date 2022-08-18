@@ -14,6 +14,12 @@ impl DomId {
     }
 }
 
+impl ToDomId for DomId {
+    fn to_dom_id(&self) -> DomId {
+        self.clone()
+    }
+}
+
 impl From<&str> for DomId {
     fn from(s: &str) -> Self {
         DomId(s.into())
