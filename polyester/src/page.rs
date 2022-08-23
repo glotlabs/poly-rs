@@ -28,10 +28,10 @@ impl PageMarkup {
     }
 }
 
-pub trait Page<Model, Msg, CustomEffect> {
+pub trait Page<Model, Msg, AppEffect> {
     fn id(&self) -> DomId;
-    fn init(&self) -> (Model, Effects<Msg, CustomEffect>);
-    fn subscriptions(&self, model: &Model) -> Subscriptions<Msg, CustomEffect>;
-    fn update(&self, msg: &Msg, model: &mut Model) -> Result<Effects<Msg, CustomEffect>, String>;
+    fn init(&self) -> (Model, Effects<Msg, AppEffect>);
+    fn subscriptions(&self, model: &Model) -> Subscriptions<Msg, AppEffect>;
+    fn update(&self, msg: &Msg, model: &mut Model) -> Result<Effects<Msg, AppEffect>, String>;
     fn view(&self, model: &Model) -> PageMarkup;
 }

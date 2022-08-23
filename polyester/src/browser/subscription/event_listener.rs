@@ -26,16 +26,16 @@ pub enum EventMatcher {
 
 #[derive(Clone, serde::Serialize)]
 #[serde(rename_all = "camelCase")]
-pub struct EventListener<Msg, CustomEffect> {
+pub struct EventListener<Msg, AppEffect> {
     pub id: String,
     pub listen_target: ListenTarget,
     pub event_type: EventType,
     pub matchers: Vec<EventMatcher>,
-    pub msg: SubscriptionMsg<Msg, CustomEffect>,
+    pub msg: SubscriptionMsg<Msg, AppEffect>,
     pub propagation: EventPropagation,
 }
 
-pub fn on_click<Id, Msg, CustomEffect>(id: &Id, msg: Msg) -> Subscription<Msg, CustomEffect>
+pub fn on_click<Id, Msg, AppEffect>(id: &Id, msg: Msg) -> Subscription<Msg, AppEffect>
 where
     Id: ToDomId,
 {
@@ -56,7 +56,7 @@ where
     })
 }
 
-pub fn on_click_closest<Id, Msg, CustomEffect>(id: &Id, msg: Msg) -> Subscription<Msg, CustomEffect>
+pub fn on_click_closest<Id, Msg, AppEffect>(id: &Id, msg: Msg) -> Subscription<Msg, AppEffect>
 where
     Id: ToDomId,
 {
@@ -77,10 +77,10 @@ where
     })
 }
 
-pub fn on_input<Id, Msg, CustomEffect, ToMsg>(
+pub fn on_input<Id, Msg, AppEffect, ToMsg>(
     id: &Id,
     to_msg: ToMsg,
-) -> Subscription<Msg, CustomEffect>
+) -> Subscription<Msg, AppEffect>
 where
     Id: ToDomId,
     ToMsg: Fn(String) -> Msg,
@@ -102,10 +102,10 @@ where
     })
 }
 
-pub fn on_change<Id, Msg, CustomEffect, ToMsg>(
+pub fn on_change<Id, Msg, AppEffect, ToMsg>(
     id: &Id,
     to_msg: ToMsg,
-) -> Subscription<Msg, CustomEffect>
+) -> Subscription<Msg, AppEffect>
 where
     Id: ToDomId,
     ToMsg: Fn(Value) -> Msg,
@@ -127,10 +127,10 @@ where
     })
 }
 
-pub fn on_change_string<Id, Msg, CustomEffect, ToMsg>(
+pub fn on_change_string<Id, Msg, AppEffect, ToMsg>(
     id: &Id,
     to_msg: ToMsg,
-) -> Subscription<Msg, CustomEffect>
+) -> Subscription<Msg, AppEffect>
 where
     Id: ToDomId,
     ToMsg: Fn(String) -> Msg,
@@ -152,10 +152,10 @@ where
     })
 }
 
-pub fn on_keyup_element<Id, Msg, CustomEffect, ToMsg>(
+pub fn on_keyup_element<Id, Msg, AppEffect, ToMsg>(
     id: &Id,
     to_msg: ToMsg,
-) -> Subscription<Msg, CustomEffect>
+) -> Subscription<Msg, AppEffect>
 where
     Id: ToDomId,
     ToMsg: Fn(String) -> Msg,
@@ -177,7 +177,7 @@ where
     })
 }
 
-pub fn on_keyup_document<Msg, CustomEffect>(key: Key, msg: Msg) -> Subscription<Msg, CustomEffect> {
+pub fn on_keyup_document<Msg, AppEffect>(key: Key, msg: Msg) -> Subscription<Msg, AppEffect> {
     Subscription::EventListener(EventListener {
         id: format!("keyboard-key-{}", key),
         listen_target: ListenTarget::Document,
@@ -191,7 +191,7 @@ pub fn on_keyup_document<Msg, CustomEffect>(key: Key, msg: Msg) -> Subscription<
     })
 }
 
-pub fn on_window_resize<Msg, CustomEffect, ToMsg>(to_msg: ToMsg) -> Subscription<Msg, CustomEffect>
+pub fn on_window_resize<Msg, AppEffect, ToMsg>(to_msg: ToMsg) -> Subscription<Msg, AppEffect>
 where
     ToMsg: Fn(Value) -> Msg,
 {

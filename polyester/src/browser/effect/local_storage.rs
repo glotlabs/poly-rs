@@ -11,7 +11,7 @@ pub enum LocalStorage {
     SetItem { key: String, value: Value },
 }
 
-pub fn get_item<Msg, CustomEffect, ToMsg>(key: &str, to_msg: ToMsg) -> Effect<Msg, CustomEffect>
+pub fn get_item<Msg, AppEffect, ToMsg>(key: &str, to_msg: ToMsg) -> Effect<Msg, AppEffect>
 where
     ToMsg: Fn(Value) -> Msg,
 {
@@ -23,7 +23,7 @@ where
     effectful_msg(msg, effect)
 }
 
-pub fn set_item<Msg, CustomEffect, V>(key: &str, value: V) -> Effect<Msg, CustomEffect>
+pub fn set_item<Msg, AppEffect, V>(key: &str, value: V) -> Effect<Msg, AppEffect>
 where
     V: serde::Serialize,
 {

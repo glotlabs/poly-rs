@@ -10,29 +10,29 @@ use crate::browser::effect::navigation::*;
 use crate::browser::effectful_msg::EffectfulMsg;
 use crate::browser::time::Time;
 
-pub type Effects<Msg, CustomEffect> = Vec<Effect<Msg, CustomEffect>>;
+pub type Effects<Msg, AppEffect> = Vec<Effect<Msg, AppEffect>>;
 
 #[derive(Clone, serde::Serialize)]
 #[serde(tag = "type", content = "config")]
 #[serde(rename_all = "camelCase")]
-pub enum Effect<Msg, CustomEffect> {
+pub enum Effect<Msg, AppEffect> {
     None,
-    EffectfulMsg(Box<EffectfulMsg<Msg, CustomEffect>>),
+    EffectfulMsg(Box<EffectfulMsg<Msg, AppEffect>>),
     Dom(Dom),
     Time(Time),
     Navigation(Navigation),
     LocalStorage(LocalStorage),
-    Custom(CustomEffect),
+    App(AppEffect),
 }
 
-pub fn none<Msg, CustomEffect>() -> Effect<Msg, CustomEffect> {
+pub fn none<Msg, AppEffect>() -> Effect<Msg, AppEffect> {
     Effect::None
 }
 
-pub fn no_effects<Msg, CustomEffect>() -> Result<Effects<Msg, CustomEffect>, String> {
+pub fn no_effects<Msg, AppEffect>() -> Result<Effects<Msg, AppEffect>, String> {
     Ok(vec![none()])
 }
 
-pub fn custom_effect<Msg, CustomEffect>(effect: CustomEffect) -> Effect<Msg, CustomEffect> {
-    Effect::Custom(effect)
+pub fn app_effect<Msg, AppEffect>(effect: AppEffect) -> Effect<Msg, AppEffect> {
+    Effect::App(effect)
 }

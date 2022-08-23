@@ -2,23 +2,23 @@ use crate::page::Effects;
 use crate::page::Page;
 use wasm_bindgen::prelude::*;
 
-pub fn init<P, Model, Msg, CustomEffect>(page: &P) -> Result<JsValue, JsValue>
+pub fn init<P, Model, Msg, AppEffect>(page: &P) -> Result<JsValue, JsValue>
 where
-    P: Page<Model, Msg, CustomEffect>,
+    P: Page<Model, Msg, AppEffect>,
     Model: serde::Serialize,
     Msg: serde::Serialize,
-    CustomEffect: serde::Serialize,
+    AppEffect: serde::Serialize,
 {
     let (model, effects) = page.init();
     encode_model_and_effects(&ModelAndEffects { model, effects })
 }
 
-pub fn view_body<P, Model, Msg, CustomEffect>(
+pub fn view_body<P, Model, Msg, AppEffect>(
     page: &P,
     js_model: &JsValue,
 ) -> Result<String, JsValue>
 where
-    P: Page<Model, Msg, CustomEffect>,
+    P: Page<Model, Msg, AppEffect>,
     Model: serde::de::DeserializeOwned,
 {
     let model = decode_model(js_model)?;
@@ -27,33 +27,33 @@ where
     Ok(page_markup.body.into_string())
 }
 
-pub fn get_subscriptions<P, Model, Msg, CustomEffect>(
+pub fn get_subscriptions<P, Model, Msg, AppEffect>(
     page: &P,
     js_model: &JsValue,
 ) -> Result<JsValue, JsValue>
 where
-    P: Page<Model, Msg, CustomEffect>,
+    P: Page<Model, Msg, AppEffect>,
     Model: serde::de::DeserializeOwned,
     Msg: serde::Serialize,
-    CustomEffect: serde::Serialize,
+    AppEffect: serde::Serialize,
 {
     let model = decode_model(js_model)?;
     let subscriptions = page.subscriptions(&model);
     encode_subscriptions(&subscriptions)
 }
 
-pub fn update<P, Model, Msg, CustomEffect>(
+pub fn update<P, Model, Msg, AppEffect>(
     page: &P,
     js_msg: &JsValue,
     js_model: &JsValue,
 ) -> Result<JsValue, JsValue>
 where
-    P: Page<Model, Msg, CustomEffect>,
+    P: Page<Model, Msg, AppEffect>,
     Msg: serde::Serialize,
     Msg: serde::de::DeserializeOwned,
     Model: serde::de::DeserializeOwned,
     Model: serde::Serialize,
-    CustomEffect: serde::Serialize,
+    AppEffect: serde::Serialize,
 {
     let msg = decode_msg(js_msg)?;
     let mut model = decode_model(js_model)?;
@@ -62,13 +62,13 @@ where
     encode_model_and_effects(&ModelAndEffects { model, effects })
 }
 
-fn encode_model_and_effects<Model, Msg, CustomEffect>(
-    model_and_effects: &ModelAndEffects<Model, Msg, CustomEffect>,
+fn encode_model_and_effects<Model, Msg, AppEffect>(
+    model_and_effects: &ModelAndEffects<Model, Msg, AppEffect>,
 ) -> Result<JsValue, JsValue>
 where
     Model: serde::Serialize,
     Msg: serde::Serialize,
-    CustomEffect: serde::Serialize,
+    AppEffect: serde::Serialize,
 {
     JsValue::from_serde(&model_and_effects)
         .map_err(|err| format!("Failed to encode model and effects: {}", err).into())
@@ -102,7 +102,7 @@ where
 
 #[derive(Clone, serde::Serialize)]
 #[serde(rename_all = "camelCase")]
-pub struct ModelAndEffects<Model, Msg, CustomEffect> {
+pub struct ModelAndEffects<Model, Msg, AppEffect> {
     pub model: Model,
-    pub effects: Effects<Msg, CustomEffect>,
+    pub effects: Effects<Msg, AppEffect>,
 }

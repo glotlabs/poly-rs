@@ -8,10 +8,10 @@ pub enum Navigation {
     ReplaceUrl(String),
 }
 
-pub fn push_url<Msg, CustomEffect>(url: &str) -> Effect<Msg, CustomEffect> {
+pub fn push_url<Msg, AppEffect>(url: &str) -> Effect<Msg, AppEffect> {
     Effect::Navigation(Navigation::PushUrl(url.to_string()))
 }
 
-pub fn replace_url<Msg, CustomEffect>(url: &str) -> Effect<Msg, CustomEffect> {
+pub fn replace_url<Msg, AppEffect>(url: &str) -> Effect<Msg, AppEffect> {
     Effect::Navigation(Navigation::ReplaceUrl(url.to_string()))
 }
