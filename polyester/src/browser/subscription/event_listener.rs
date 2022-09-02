@@ -77,10 +77,7 @@ where
     })
 }
 
-pub fn on_input<Id, Msg, AppEffect, ToMsg>(
-    id: &Id,
-    to_msg: ToMsg,
-) -> Subscription<Msg, AppEffect>
+pub fn on_input<Id, Msg, AppEffect, ToMsg>(id: &Id, to_msg: ToMsg) -> Subscription<Msg, AppEffect>
 where
     Id: ToDomId,
     ToMsg: Fn(String) -> Msg,
@@ -102,10 +99,7 @@ where
     })
 }
 
-pub fn on_change<Id, Msg, AppEffect, ToMsg>(
-    id: &Id,
-    to_msg: ToMsg,
-) -> Subscription<Msg, AppEffect>
+pub fn on_change<Id, Msg, AppEffect, ToMsg>(id: &Id, to_msg: ToMsg) -> Subscription<Msg, AppEffect>
 where
     Id: ToDomId,
     ToMsg: Fn(Value) -> Msg,
@@ -145,6 +139,53 @@ where
         }],
         event_type: EventType::Change,
         msg: SubscriptionMsg::effectful(to_msg, dom::get_element_string_value(&dom_id)),
+        propagation: EventPropagation {
+            stop_propagation: true,
+            prevent_default: true,
+        },
+    })
+}
+
+pub fn on_radio_change_string<Msg, AppEffect, ToMsg>(
+    name: &str,
+    to_msg: ToMsg,
+) -> Subscription<Msg, AppEffect>
+where
+    ToMsg: Fn(String) -> Msg,
+{
+    let selector = Selector::radio_group(name);
+    let effect = dom::get_radio_group_string_value(&selector);
+
+    Subscription::EventListener(EventListener {
+        id: format!("radio-{}", name),
+        listen_target: ListenTarget::Document,
+        matchers: vec![EventMatcher::ExactSelector { selector }],
+        event_type: EventType::Change,
+        msg: SubscriptionMsg::effectful(to_msg, effect),
+        propagation: EventPropagation {
+            stop_propagation: true,
+            prevent_default: true,
+        },
+    })
+}
+
+pub fn on_radio_change_json<Id, Msg, AppEffect, ToMsg>(
+    name: &str,
+    to_msg: ToMsg,
+) -> Subscription<Msg, AppEffect>
+where
+    Id: ToDomId,
+    ToMsg: Fn(String) -> Msg,
+{
+    let selector = Selector::radio_group(name);
+    let effect = dom::get_radio_group_json_value(&selector);
+
+    Subscription::EventListener(EventListener {
+        id: format!("radio-{}", name),
+        listen_target: ListenTarget::Document,
+        matchers: vec![EventMatcher::ExactSelector { selector }],
+        event_type: EventType::Change,
+        msg: SubscriptionMsg::effectful(to_msg, effect),
         propagation: EventPropagation {
             stop_propagation: true,
             prevent_default: true,

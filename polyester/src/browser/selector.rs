@@ -4,8 +4,12 @@ use std::fmt;
 pub struct Selector(String);
 
 impl Selector {
-    pub fn new(selector: &str) -> Selector {
-        Selector(selector.to_string())
+    pub fn id(id: &str) -> Selector {
+        Selector(format!("#{}", id))
+    }
+
+    pub fn radio_group(name: &str) -> Selector {
+        Selector(format!("input[type=radio][name={}]", name))
     }
 }
 

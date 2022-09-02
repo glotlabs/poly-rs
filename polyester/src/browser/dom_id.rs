@@ -10,7 +10,7 @@ impl DomId {
     }
 
     pub fn selector(&self) -> Selector {
-        Selector::new(&format!("#{}", self))
+        Selector::id(&self.0)
     }
 }
 
