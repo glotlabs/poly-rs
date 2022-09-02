@@ -2,9 +2,9 @@ use crate::page::Effects;
 use crate::page::Page;
 use wasm_bindgen::prelude::*;
 
-pub fn init<P, Model, Msg, AppEffect>(page: &P) -> Result<JsValue, JsValue>
+pub fn init<P, Model, Msg, AppEffect, Markup>(page: &P) -> Result<JsValue, JsValue>
 where
-    P: Page<Model, Msg, AppEffect>,
+    P: Page<Model, Msg, AppEffect, Markup>,
     Model: serde::Serialize,
     Msg: serde::Serialize,
     AppEffect: serde::Serialize,
@@ -13,26 +13,26 @@ where
     encode_model_and_effects(&ModelAndEffects { model, effects })
 }
 
-pub fn view_body<P, Model, Msg, AppEffect>(
+pub fn view_body<P, Model, Msg, AppEffect, Markup>(
     page: &P,
     js_model: &JsValue,
 ) -> Result<String, JsValue>
 where
-    P: Page<Model, Msg, AppEffect>,
+    P: Page<Model, Msg, AppEffect, Markup>,
     Model: serde::de::DeserializeOwned,
 {
     let model = decode_model(js_model)?;
-    let page_markup = page.view(&model);
+    let markup = page.view(&model);
 
-    Ok(page_markup.body.into_string())
+    Ok(page.render_partial(markup.body))
 }
 
-pub fn get_subscriptions<P, Model, Msg, AppEffect>(
+pub fn get_subscriptions<P, Model, Msg, AppEffect, Markup>(
     page: &P,
     js_model: &JsValue,
 ) -> Result<JsValue, JsValue>
 where
-    P: Page<Model, Msg, AppEffect>,
+    P: Page<Model, Msg, AppEffect, Markup>,
     Model: serde::de::DeserializeOwned,
     Msg: serde::Serialize,
     AppEffect: serde::Serialize,
@@ -42,13 +42,13 @@ where
     encode_subscriptions(&subscriptions)
 }
 
-pub fn update<P, Model, Msg, AppEffect>(
+pub fn update<P, Model, Msg, AppEffect, Markup>(
     page: &P,
     js_msg: &JsValue,
     js_model: &JsValue,
 ) -> Result<JsValue, JsValue>
 where
-    P: Page<Model, Msg, AppEffect>,
+    P: Page<Model, Msg, AppEffect, Markup>,
     Msg: serde::Serialize,
     Msg: serde::de::DeserializeOwned,
     Model: serde::de::DeserializeOwned,
