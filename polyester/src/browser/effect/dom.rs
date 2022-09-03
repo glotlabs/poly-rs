@@ -1,25 +1,41 @@
 use crate::browser::DomId;
 use crate::browser::Effect;
 use crate::browser::Selector;
+use crate::browser::ToDomId;
 
 #[derive(Clone, serde::Serialize, serde::Deserialize)]
 #[serde(tag = "type", content = "config")]
 #[serde(rename_all = "camelCase")]
 pub enum Dom {
     #[serde(rename_all = "camelCase")]
+    FocusElement {
+        element_id: DomId,
+    },
+    #[serde(rename_all = "camelCase")]
     GetElementValue {
         element_id: DomId,
         parse_as_json: bool,
     },
+    #[serde(rename_all = "camelCase")]
     GetRadioGroupValue {
         selector: Selector,
         parse_as_json: bool,
     },
+    #[serde(rename_all = "camelCase")]
     GetTargetDataValue {
         name: String,
         parse_as_json: bool,
     },
     GetWindowSize,
+}
+
+pub fn focus_element<Msg, AppEffect, Id>(id: Id) -> Effect<Msg, AppEffect>
+where
+    Id: ToDomId,
+{
+    Effect::Dom(Dom::FocusElement {
+        element_id: id.to_dom_id(),
+    })
 }
 
 pub fn get_element_json_value<Msg, AppEffect>(dom_id: &DomId) -> Effect<Msg, AppEffect> {
