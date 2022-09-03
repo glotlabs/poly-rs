@@ -12,6 +12,10 @@ pub enum Dom {
         element_id: DomId,
     },
     #[serde(rename_all = "camelCase")]
+    SelectInputText {
+        element_id: DomId,
+    },
+    #[serde(rename_all = "camelCase")]
     GetElementValue {
         element_id: DomId,
         parse_as_json: bool,
@@ -34,6 +38,15 @@ where
     Id: ToDomId,
 {
     Effect::Dom(Dom::FocusElement {
+        element_id: id.to_dom_id(),
+    })
+}
+
+pub fn select_input_text<Msg, AppEffect, Id>(id: Id) -> Effect<Msg, AppEffect>
+where
+    Id: ToDomId,
+{
+    Effect::Dom(Dom::SelectInputText {
         element_id: id.to_dom_id(),
     })
 }
