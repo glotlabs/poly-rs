@@ -77,6 +77,52 @@ where
     })
 }
 
+pub fn on_click_data_string<Msg, AppEffect, ToMsg>(
+    name: &str,
+    to_msg: ToMsg,
+) -> Subscription<Msg, AppEffect>
+where
+    ToMsg: Fn(String) -> Msg,
+{
+    let selector = Selector::data(name);
+    let effect = dom::get_target_data_string_value(name);
+
+    Subscription::EventListener(EventListener {
+        id: format!("data-{}", name),
+        listen_target: ListenTarget::Document,
+        matchers: vec![EventMatcher::ExactSelector { selector }],
+        event_type: EventType::Click,
+        msg: SubscriptionMsg::effectful(to_msg, effect),
+        propagation: EventPropagation {
+            stop_propagation: true,
+            prevent_default: true,
+        },
+    })
+}
+
+pub fn on_click_closest_data_string<Msg, AppEffect, ToMsg>(
+    name: &str,
+    to_msg: ToMsg,
+) -> Subscription<Msg, AppEffect>
+where
+    ToMsg: Fn(String) -> Msg,
+{
+    let selector = Selector::data(name);
+    let effect = dom::get_target_data_string_value(name);
+
+    Subscription::EventListener(EventListener {
+        id: format!("data-{}", name),
+        listen_target: ListenTarget::Document,
+        matchers: vec![EventMatcher::ClosestSelector { selector }],
+        event_type: EventType::Click,
+        msg: SubscriptionMsg::effectful(to_msg, effect),
+        propagation: EventPropagation {
+            stop_propagation: true,
+            prevent_default: true,
+        },
+    })
+}
+
 pub fn on_input<Id, Msg, AppEffect, ToMsg>(id: &Id, to_msg: ToMsg) -> Subscription<Msg, AppEffect>
 where
     Id: ToDomId,

@@ -15,6 +15,10 @@ pub enum Dom {
         selector: Selector,
         parse_as_json: bool,
     },
+    GetTargetDataValue {
+        name: String,
+        parse_as_json: bool,
+    },
     GetWindowSize,
 }
 
@@ -43,6 +47,20 @@ pub fn get_radio_group_string_value<Msg, AppEffect>(selector: &Selector) -> Effe
     Effect::Dom(Dom::GetRadioGroupValue {
         selector: selector.clone(),
         parse_as_json: false,
+    })
+}
+
+pub fn get_target_data_string_value<Msg, AppEffect>(name: &str) -> Effect<Msg, AppEffect> {
+    Effect::Dom(Dom::GetTargetDataValue {
+        name: name.to_string(),
+        parse_as_json: false,
+    })
+}
+
+pub fn get_target_data_json_value<Msg, AppEffect>(name: &str) -> Effect<Msg, AppEffect> {
+    Effect::Dom(Dom::GetTargetDataValue {
+        name: name.to_string(),
+        parse_as_json: true,
     })
 }
 

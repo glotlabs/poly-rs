@@ -11,6 +11,10 @@ impl Selector {
     pub fn radio_group(name: &str) -> Selector {
         Selector(format!("input[type=radio][name={}]", name))
     }
+
+    pub fn data(name: &str) -> Selector {
+        Selector(format!("[data-{}]", name))
+    }
 }
 
 impl fmt::Display for Selector {
