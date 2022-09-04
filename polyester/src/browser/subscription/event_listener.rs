@@ -239,6 +239,27 @@ where
     })
 }
 
+pub fn on_submit<Id, Msg, AppEffect>(id: &Id, msg: Msg) -> Subscription<Msg, AppEffect>
+where
+    Id: ToDomId,
+{
+    let dom_id = id.to_dom_id();
+
+    Subscription::EventListener(EventListener {
+        id: dom_id.to_string(),
+        listen_target: ListenTarget::Document,
+        matchers: vec![EventMatcher::ExactSelector {
+            selector: dom_id.selector(),
+        }],
+        event_type: EventType::Submit,
+        msg: SubscriptionMsg::pure(msg),
+        propagation: EventPropagation {
+            stop_propagation: true,
+            prevent_default: true,
+        },
+    })
+}
+
 pub fn on_keyup_element<Id, Msg, AppEffect, ToMsg>(
     id: &Id,
     to_msg: ToMsg,
@@ -308,6 +329,7 @@ pub enum EventType {
     Click,
     Input,
     Change,
+    Submit,
     Keyup,
     Resize,
 }
