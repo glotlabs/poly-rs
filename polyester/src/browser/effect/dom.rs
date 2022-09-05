@@ -32,7 +32,7 @@ pub enum Dom {
     GetWindowSize,
 }
 
-pub fn focus_element<Msg, AppEffect, Id>(id: &Id) -> Effect<Msg, AppEffect>
+pub fn focus_element<Msg, AppEffect, Id>(id: Id) -> Effect<Msg, AppEffect>
 where
     Id: DomId,
 {
@@ -41,7 +41,7 @@ where
     })
 }
 
-pub fn select_input_text<Msg, AppEffect, Id>(id: &Id) -> Effect<Msg, AppEffect>
+pub fn select_input_text<Msg, AppEffect, Id>(id: Id) -> Effect<Msg, AppEffect>
 where
     Id: DomId,
 {
@@ -50,7 +50,7 @@ where
     })
 }
 
-pub fn get_element_json_value<Msg, AppEffect, Id>(id: &Id) -> Effect<Msg, AppEffect>
+pub fn get_element_json_value<Msg, AppEffect, Id>(id: Id) -> Effect<Msg, AppEffect>
 where
     Id: DomId,
 {
@@ -60,7 +60,7 @@ where
     })
 }
 
-pub fn get_element_string_value<Msg, AppEffect, Id>(id: &Id) -> Effect<Msg, AppEffect>
+pub fn get_element_string_value<Msg, AppEffect, Id>(id: Id) -> Effect<Msg, AppEffect>
 where
     Id: DomId,
 {

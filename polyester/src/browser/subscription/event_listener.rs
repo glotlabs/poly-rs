@@ -35,7 +35,7 @@ pub struct EventListener<Msg, AppEffect> {
     pub propagation: EventPropagation,
 }
 
-pub fn on_click<Id, Msg, AppEffect>(id: &Id, msg: Msg) -> Subscription<Msg, AppEffect>
+pub fn on_click<Id, Msg, AppEffect>(id: Id, msg: Msg) -> Subscription<Msg, AppEffect>
 where
     Id: DomId,
 {
@@ -54,7 +54,7 @@ where
     })
 }
 
-pub fn on_click_closest<Id, Msg, AppEffect>(id: &Id, msg: Msg) -> Subscription<Msg, AppEffect>
+pub fn on_click_closest<Id, Msg, AppEffect>(id: Id, msg: Msg) -> Subscription<Msg, AppEffect>
 where
     Id: DomId,
 {
@@ -119,7 +119,7 @@ where
     })
 }
 
-pub fn on_input<Id, Msg, AppEffect, ToMsg>(id: &Id, to_msg: ToMsg) -> Subscription<Msg, AppEffect>
+pub fn on_input<Id, Msg, AppEffect, ToMsg>(id: Id, to_msg: ToMsg) -> Subscription<Msg, AppEffect>
 where
     Id: DomId,
     ToMsg: Fn(String) -> Msg,
@@ -139,7 +139,7 @@ where
     })
 }
 
-pub fn on_change<Id, Msg, AppEffect, ToMsg>(id: &Id, to_msg: ToMsg) -> Subscription<Msg, AppEffect>
+pub fn on_change<Id, Msg, AppEffect, ToMsg>(id: Id, to_msg: ToMsg) -> Subscription<Msg, AppEffect>
 where
     Id: DomId,
     ToMsg: Fn(Value) -> Msg,
@@ -160,7 +160,7 @@ where
 }
 
 pub fn on_change_string<Id, Msg, AppEffect, ToMsg>(
-    id: &Id,
+    id: Id,
     to_msg: ToMsg,
 ) -> Subscription<Msg, AppEffect>
 where
@@ -229,7 +229,7 @@ where
     })
 }
 
-pub fn on_submit<Id, Msg, AppEffect>(id: &Id, msg: Msg) -> Subscription<Msg, AppEffect>
+pub fn on_submit<Id, Msg, AppEffect>(id: Id, msg: Msg) -> Subscription<Msg, AppEffect>
 where
     Id: DomId,
 {
@@ -249,7 +249,7 @@ where
 }
 
 pub fn on_keyup_element<Id, Msg, AppEffect, ToMsg>(
-    id: &Id,
+    id: Id,
     to_msg: ToMsg,
 ) -> Subscription<Msg, AppEffect>
 where
