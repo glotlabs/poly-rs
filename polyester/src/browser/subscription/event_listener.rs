@@ -2,9 +2,9 @@ use crate::browser::dom;
 use crate::browser::keyboard::Key;
 use crate::browser::keyboard::KeyCombo;
 use crate::browser::selector::Selector;
+use crate::browser::DomId;
 use crate::browser::Subscription;
 use crate::browser::SubscriptionMsg;
-use crate::browser::ToDomId;
 use crate::browser::Value;
 
 #[derive(Clone, serde::Serialize, serde::Deserialize)]
@@ -37,15 +37,13 @@ pub struct EventListener<Msg, AppEffect> {
 
 pub fn on_click<Id, Msg, AppEffect>(id: &Id, msg: Msg) -> Subscription<Msg, AppEffect>
 where
-    Id: ToDomId,
+    Id: DomId,
 {
-    let dom_id = id.to_dom_id();
-
     Subscription::EventListener(EventListener {
-        id: dom_id.to_string(),
+        id: id.to_string(),
         listen_target: ListenTarget::Document,
         matchers: vec![EventMatcher::ExactSelector {
-            selector: dom_id.selector(),
+            selector: id.selector(),
         }],
         event_type: EventType::Click,
         msg: SubscriptionMsg::pure(msg),
@@ -58,15 +56,13 @@ where
 
 pub fn on_click_closest<Id, Msg, AppEffect>(id: &Id, msg: Msg) -> Subscription<Msg, AppEffect>
 where
-    Id: ToDomId,
+    Id: DomId,
 {
-    let dom_id = id.to_dom_id();
-
     Subscription::EventListener(EventListener {
-        id: dom_id.to_string(),
+        id: id.to_string(),
         listen_target: ListenTarget::Document,
         matchers: vec![EventMatcher::ClosestSelector {
-            selector: dom_id.selector(),
+            selector: id.selector(),
         }],
         event_type: EventType::Click,
         msg: SubscriptionMsg::pure(msg),
@@ -125,19 +121,17 @@ where
 
 pub fn on_input<Id, Msg, AppEffect, ToMsg>(id: &Id, to_msg: ToMsg) -> Subscription<Msg, AppEffect>
 where
-    Id: ToDomId,
+    Id: DomId,
     ToMsg: Fn(String) -> Msg,
 {
-    let dom_id = id.to_dom_id();
-
     Subscription::EventListener(EventListener {
-        id: dom_id.to_string(),
+        id: id.to_string(),
         listen_target: ListenTarget::Document,
         matchers: vec![EventMatcher::ExactSelector {
-            selector: dom_id.selector(),
+            selector: id.selector(),
         }],
         event_type: EventType::Input,
-        msg: SubscriptionMsg::effectful(to_msg, dom::get_element_string_value(&dom_id)),
+        msg: SubscriptionMsg::effectful(to_msg, dom::get_element_string_value(id)),
         propagation: EventPropagation {
             stop_propagation: true,
             prevent_default: true,
@@ -147,19 +141,17 @@ where
 
 pub fn on_change<Id, Msg, AppEffect, ToMsg>(id: &Id, to_msg: ToMsg) -> Subscription<Msg, AppEffect>
 where
-    Id: ToDomId,
+    Id: DomId,
     ToMsg: Fn(Value) -> Msg,
 {
-    let dom_id = id.to_dom_id();
-
     Subscription::EventListener(EventListener {
-        id: dom_id.to_string(),
+        id: id.to_string(),
         listen_target: ListenTarget::Document,
         matchers: vec![EventMatcher::ExactSelector {
-            selector: dom_id.selector(),
+            selector: id.selector(),
         }],
         event_type: EventType::Change,
-        msg: SubscriptionMsg::effectful(to_msg, dom::get_element_json_value(&dom_id)),
+        msg: SubscriptionMsg::effectful(to_msg, dom::get_element_json_value(id)),
         propagation: EventPropagation {
             stop_propagation: true,
             prevent_default: true,
@@ -172,19 +164,17 @@ pub fn on_change_string<Id, Msg, AppEffect, ToMsg>(
     to_msg: ToMsg,
 ) -> Subscription<Msg, AppEffect>
 where
-    Id: ToDomId,
+    Id: DomId,
     ToMsg: Fn(String) -> Msg,
 {
-    let dom_id = id.to_dom_id();
-
     Subscription::EventListener(EventListener {
-        id: dom_id.to_string(),
+        id: id.to_string(),
         listen_target: ListenTarget::Document,
         matchers: vec![EventMatcher::ExactSelector {
-            selector: dom_id.selector(),
+            selector: id.selector(),
         }],
         event_type: EventType::Change,
-        msg: SubscriptionMsg::effectful(to_msg, dom::get_element_string_value(&dom_id)),
+        msg: SubscriptionMsg::effectful(to_msg, dom::get_element_string_value(id)),
         propagation: EventPropagation {
             stop_propagation: true,
             prevent_default: true,
@@ -220,7 +210,7 @@ pub fn on_radio_change_json<Id, Msg, AppEffect, ToMsg>(
     to_msg: ToMsg,
 ) -> Subscription<Msg, AppEffect>
 where
-    Id: ToDomId,
+    Id: DomId,
     ToMsg: Fn(String) -> Msg,
 {
     let selector = Selector::radio_group(name);
@@ -241,15 +231,13 @@ where
 
 pub fn on_submit<Id, Msg, AppEffect>(id: &Id, msg: Msg) -> Subscription<Msg, AppEffect>
 where
-    Id: ToDomId,
+    Id: DomId,
 {
-    let dom_id = id.to_dom_id();
-
     Subscription::EventListener(EventListener {
-        id: dom_id.to_string(),
+        id: id.to_string(),
         listen_target: ListenTarget::Document,
         matchers: vec![EventMatcher::ExactSelector {
-            selector: dom_id.selector(),
+            selector: id.selector(),
         }],
         event_type: EventType::Submit,
         msg: SubscriptionMsg::pure(msg),
@@ -265,19 +253,17 @@ pub fn on_keyup_element<Id, Msg, AppEffect, ToMsg>(
     to_msg: ToMsg,
 ) -> Subscription<Msg, AppEffect>
 where
-    Id: ToDomId,
+    Id: DomId,
     ToMsg: Fn(String) -> Msg,
 {
-    let dom_id = id.to_dom_id();
-
     Subscription::EventListener(EventListener {
-        id: dom_id.to_string(),
+        id: id.to_string(),
         listen_target: ListenTarget::Document,
         event_type: EventType::Keyup,
         matchers: vec![EventMatcher::ExactSelector {
-            selector: dom_id.selector(),
+            selector: id.selector(),
         }],
-        msg: SubscriptionMsg::effectful(to_msg, dom::get_element_string_value(&dom_id)),
+        msg: SubscriptionMsg::effectful(to_msg, dom::get_element_string_value(id)),
         propagation: EventPropagation {
             stop_propagation: true,
             prevent_default: true,

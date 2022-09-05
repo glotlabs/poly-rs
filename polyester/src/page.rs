@@ -6,7 +6,7 @@ use crate::browser::Subscriptions;
 use maud::html;
 
 pub trait Page<Model, Msg, AppEffect, Markup> {
-    fn id(&self) -> DomId;
+    fn id(&self) -> Box<dyn DomId>;
     fn init(&self) -> (Model, Effects<Msg, AppEffect>);
     fn subscriptions(&self, model: &Model) -> Subscriptions<Msg, AppEffect>;
     fn update(&self, msg: &Msg, model: &mut Model) -> Result<Effects<Msg, AppEffect>, String>;

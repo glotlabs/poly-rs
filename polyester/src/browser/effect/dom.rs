@@ -1,7 +1,6 @@
 use crate::browser::DomId;
 use crate::browser::Effect;
 use crate::browser::Selector;
-use crate::browser::ToDomId;
 
 #[derive(Clone, serde::Serialize, serde::Deserialize)]
 #[serde(tag = "type", content = "config")]
@@ -9,15 +8,15 @@ use crate::browser::ToDomId;
 pub enum Dom {
     #[serde(rename_all = "camelCase")]
     FocusElement {
-        element_id: DomId,
+        element_id: String,
     },
     #[serde(rename_all = "camelCase")]
     SelectInputText {
-        element_id: DomId,
+        element_id: String,
     },
     #[serde(rename_all = "camelCase")]
     GetElementValue {
-        element_id: DomId,
+        element_id: String,
         parse_as_json: bool,
     },
     #[serde(rename_all = "camelCase")]
@@ -33,34 +32,40 @@ pub enum Dom {
     GetWindowSize,
 }
 
-pub fn focus_element<Msg, AppEffect, Id>(id: Id) -> Effect<Msg, AppEffect>
+pub fn focus_element<Msg, AppEffect, Id>(id: &Id) -> Effect<Msg, AppEffect>
 where
-    Id: ToDomId,
+    Id: DomId,
 {
     Effect::Dom(Dom::FocusElement {
-        element_id: id.to_dom_id(),
+        element_id: id.to_string(),
     })
 }
 
-pub fn select_input_text<Msg, AppEffect, Id>(id: Id) -> Effect<Msg, AppEffect>
+pub fn select_input_text<Msg, AppEffect, Id>(id: &Id) -> Effect<Msg, AppEffect>
 where
-    Id: ToDomId,
+    Id: DomId,
 {
     Effect::Dom(Dom::SelectInputText {
-        element_id: id.to_dom_id(),
+        element_id: id.to_string(),
     })
 }
 
-pub fn get_element_json_value<Msg, AppEffect>(dom_id: &DomId) -> Effect<Msg, AppEffect> {
+pub fn get_element_json_value<Msg, AppEffect, Id>(id: &Id) -> Effect<Msg, AppEffect>
+where
+    Id: DomId,
+{
     Effect::Dom(Dom::GetElementValue {
-        element_id: dom_id.clone(),
+        element_id: id.to_string(),
         parse_as_json: true,
     })
 }
 
-pub fn get_element_string_value<Msg, AppEffect>(dom_id: &DomId) -> Effect<Msg, AppEffect> {
+pub fn get_element_string_value<Msg, AppEffect, Id>(id: &Id) -> Effect<Msg, AppEffect>
+where
+    Id: DomId,
+{
     Effect::Dom(Dom::GetElementValue {
-        element_id: dom_id.clone(),
+        element_id: id.to_string(),
         parse_as_json: false,
     })
 }

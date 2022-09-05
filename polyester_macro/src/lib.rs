@@ -4,17 +4,13 @@ use quote::quote;
 use syn::DeriveInput;
 use syn::{parse_macro_input, Ident};
 
-#[proc_macro_derive(ToDomId)]
-pub fn to_dom_id_derive(input: TokenStream) -> TokenStream {
+#[proc_macro_derive(DomId)]
+pub fn dom_id_derive(input: TokenStream) -> TokenStream {
     let ast = parse_macro_input!(input as DeriveInput);
     let name = &ast.ident;
 
     TokenStream::from(quote! {
-        impl ToDomId for #name {
-            fn to_dom_id(&self) -> polyester::browser::DomId {
-                polyester::browser::DomId::new(&self.to_string())
-            }
-        }
+        impl DomId for #name {}
     })
 }
 

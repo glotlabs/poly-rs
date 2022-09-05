@@ -1,37 +1,8 @@
 use crate::browser::selector::Selector;
-use std::fmt;
+use std::fmt::Display;
 
-#[derive(Clone, serde::Serialize, serde::Deserialize)]
-pub struct DomId(String);
-
-impl DomId {
-    pub fn new(id: &str) -> DomId {
-        DomId(id.into())
+pub trait DomId: Display {
+    fn selector(&self) -> Selector {
+        Selector::id(&self.to_string())
     }
-
-    pub fn selector(&self) -> Selector {
-        Selector::id(&self.0)
-    }
-}
-
-impl ToDomId for DomId {
-    fn to_dom_id(&self) -> DomId {
-        self.clone()
-    }
-}
-
-impl From<&str> for DomId {
-    fn from(s: &str) -> Self {
-        DomId(s.into())
-    }
-}
-
-impl fmt::Display for DomId {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.0)
-    }
-}
-
-pub trait ToDomId {
-    fn to_dom_id(&self) -> DomId;
 }
