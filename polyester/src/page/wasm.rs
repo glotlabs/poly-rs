@@ -24,7 +24,7 @@ where
     let model = decode_model(js_model)?;
     let markup = page.view(&model);
 
-    Ok(page.render_partial(markup.body))
+    Ok(page.render(markup.body))
 }
 
 pub fn get_subscriptions<P, Model, Msg, AppEffect, Markup>(

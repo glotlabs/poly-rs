@@ -11,7 +11,7 @@ pub trait Page<Model, Msg, AppEffect, Markup> {
     fn subscriptions(&self, model: &Model) -> Subscriptions<Msg, AppEffect>;
     fn update(&self, msg: &Msg, model: &mut Model) -> Result<Effects<Msg, AppEffect>, String>;
     fn view(&self, model: &Model) -> PageMarkup<Markup>;
-    fn render_partial(&self, markup: Markup) -> String;
+    fn render(&self, markup: Markup) -> String;
     fn render_page(&self, markup: PageMarkup<Markup>) -> String;
 }
 
