@@ -29,10 +29,6 @@ pub fn none<Msg, AppEffect>() -> Effect<Msg, AppEffect> {
     Effect::None
 }
 
-pub fn no_effects<Msg, AppEffect>() -> Result<Effects<Msg, AppEffect>, String> {
-    Ok(vec![none()])
-}
-
 pub fn app_effect<Msg, AppEffect>(effect: AppEffect) -> Effect<Msg, AppEffect> {
     Effect::App(effect)
 }
