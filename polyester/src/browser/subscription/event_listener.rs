@@ -2,6 +2,7 @@ use crate::browser::dom;
 use crate::browser::keyboard::Key;
 use crate::browser::keyboard::KeyCombo;
 use crate::browser::selector::Selector;
+use crate::browser::Button;
 use crate::browser::DomId;
 use crate::browser::Subscription;
 use crate::browser::SubscriptionMsg;
@@ -20,6 +21,7 @@ pub enum ListenTarget {
 pub enum EventMatcher {
     ExactSelector { selector: Selector },
     ClosestSelector { selector: Selector },
+    MouseButton { button: Button },
     KeyboardKey { key: Key },
     KeyCombo { combo: KeyCombo },
 }
@@ -112,6 +114,30 @@ where
         matchers: vec![EventMatcher::ClosestSelector { selector }],
         event_type: EventType::Click,
         msg: SubscriptionMsg::effectful(to_msg, effect),
+        propagation: EventPropagation {
+            stop_propagation: true,
+            prevent_default: true,
+        },
+    })
+}
+
+pub fn on_mouse_down<Id, Msg, AppEffect>(id: Id, msg: Msg) -> Subscription<Msg, AppEffect>
+where
+    Id: DomId,
+{
+    Subscription::EventListener(EventListener {
+        id: id.to_string(),
+        listen_target: ListenTarget::Document,
+        matchers: vec![
+            EventMatcher::ExactSelector {
+                selector: id.selector(),
+            },
+            EventMatcher::MouseButton {
+                button: Button::Main,
+            },
+        ],
+        event_type: EventType::Mousedown,
+        msg: SubscriptionMsg::pure(msg),
         propagation: EventPropagation {
             stop_propagation: true,
             prevent_default: true,
@@ -313,6 +339,7 @@ pub struct EventPropagation {
 #[serde(rename_all = "camelCase")]
 pub enum EventType {
     Click,
+    Mousedown,
     Input,
     Change,
     Submit,
