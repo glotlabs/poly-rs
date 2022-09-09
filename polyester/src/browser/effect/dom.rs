@@ -110,12 +110,32 @@ pub fn window_size<Msg, AppEffect>() -> Effect<Msg, AppEffect> {
     Effect::Dom(Dom::GetWindowSize)
 }
 
-pub fn dispatch_event<Msg, AppEffect>(
-    event_target: EventTarget,
+pub fn dispatch_window_event<Msg, AppEffect>(event_type: &str) -> Effect<Msg, AppEffect> {
+    Effect::Dom(Dom::DispatchEvent {
+        event_target: EventTarget::Window,
+        event_type: event_type.to_string(),
+        bubbles: false,
+        cancelable: false,
+    })
+}
+
+pub fn dispatch_document_event<Msg, AppEffect>(event_type: &str) -> Effect<Msg, AppEffect> {
+    Effect::Dom(Dom::DispatchEvent {
+        event_target: EventTarget::Document,
+        event_type: event_type.to_string(),
+        bubbles: false,
+        cancelable: false,
+    })
+}
+
+pub fn dispatch_element_event<Msg, AppEffect>(
+    id: impl DomId,
     event_type: &str,
 ) -> Effect<Msg, AppEffect> {
     Effect::Dom(Dom::DispatchEvent {
-        event_target,
+        event_target: EventTarget::Element {
+            element_id: id.to_string(),
+        },
         event_type: event_type.to_string(),
         bubbles: false,
         cancelable: false,
