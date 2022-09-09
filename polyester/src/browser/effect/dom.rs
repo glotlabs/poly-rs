@@ -1,5 +1,6 @@
 use crate::browser::DomId;
 use crate::browser::Effect;
+use crate::browser::EventTarget;
 use crate::browser::Selector;
 
 #[derive(Clone, serde::Serialize, serde::Deserialize)]
@@ -30,6 +31,13 @@ pub enum Dom {
         parse_as_json: bool,
     },
     GetWindowSize,
+    #[serde(rename_all = "camelCase")]
+    DispatchEvent {
+        event_target: EventTarget,
+        event_type: String,
+        bubbles: bool,
+        cancelable: bool,
+    },
 }
 
 pub fn focus_element<Msg, AppEffect, Id>(id: Id) -> Effect<Msg, AppEffect>
@@ -100,4 +108,16 @@ pub fn get_target_data_json_value<Msg, AppEffect>(name: &str) -> Effect<Msg, App
 
 pub fn window_size<Msg, AppEffect>() -> Effect<Msg, AppEffect> {
     Effect::Dom(Dom::GetWindowSize)
+}
+
+pub fn dispatch_event<Msg, AppEffect>(
+    event_target: EventTarget,
+    event_type: &str,
+) -> Effect<Msg, AppEffect> {
+    Effect::Dom(Dom::DispatchEvent {
+        event_target,
+        event_type: event_type.to_string(),
+        bubbles: false,
+        cancelable: false,
+    })
 }
