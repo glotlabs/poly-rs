@@ -1,3 +1,4 @@
+pub mod console;
 pub mod dom;
 pub mod effectful_msg;
 pub mod local_storage;
@@ -5,6 +6,7 @@ pub mod navigation;
 pub mod time;
 
 use crate::browser::dom::Dom;
+use crate::browser::effect::console::Console;
 use crate::browser::effect::local_storage::*;
 use crate::browser::effect::navigation::*;
 use crate::browser::effectful_msg::EffectfulMsg;
@@ -22,6 +24,7 @@ pub enum Effect<Msg, AppEffect> {
     Time(Time),
     Navigation(Navigation),
     LocalStorage(LocalStorage),
+    Console(Console),
     App(AppEffect),
 }
 
