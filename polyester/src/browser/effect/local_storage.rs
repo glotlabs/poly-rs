@@ -23,12 +23,20 @@ where
     effectful_msg(msg, effect)
 }
 
-pub fn set_item<Msg, AppEffect, V>(key: &str, value: V) -> Effect<Msg, AppEffect>
+pub fn set_item<Msg, AppEffect, V, ToMsg>(
+    key: &str,
+    value: V,
+    to_msg: ToMsg,
+) -> Effect<Msg, AppEffect>
 where
     V: serde::Serialize,
+    ToMsg: Fn(bool) -> Msg,
 {
-    Effect::LocalStorage(LocalStorage::SetItem {
+    let effect = Effect::LocalStorage(LocalStorage::SetItem {
         key: key.to_string(),
         value: browser::to_value(value),
-    })
+    });
+
+    let msg = to_msg(false);
+    effectful_msg(msg, effect)
 }
