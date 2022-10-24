@@ -50,6 +50,10 @@ impl<T: Clone> Capture<T> {
     pub fn value(&self) -> T {
         self.0.clone()
     }
+
+    pub fn value_ref(&self) -> &T {
+        &self.0
+    }
 }
 
 impl<T: Default> Default for Capture<T> {
