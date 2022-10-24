@@ -1,6 +1,7 @@
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use std::fmt;
 
-#[derive(Clone, serde::Deserialize, serde::Serialize)]
+#[derive(Clone, Deserialize, Serialize)]
 pub struct Value(serde_json::Value);
 
 impl Value {
@@ -26,7 +27,7 @@ impl fmt::Display for Value {
 
 pub fn to_value<T>(value: T) -> Value
 where
-    T: serde::Serialize,
+    T: Serialize,
 {
     match serde_json::to_value(value) {
         Ok(json_value) => Value(json_value),
@@ -35,5 +36,42 @@ where
             "Failed to serialize value: {}",
             err
         ))),
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct Capture<T>(T);
+
+impl<T: Clone> Capture<T> {
+    pub fn into_value(self) -> T {
+        self.0
+    }
+
+    pub fn value(&self) -> T {
+        self.0.clone()
+    }
+}
+
+impl<T: Default> Default for Capture<T> {
+    fn default() -> Self {
+        Capture(T::default())
+    }
+}
+
+impl<T> Serialize for Capture<T> {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.serialize_str("$CAPTURE_VALUE")
+    }
+}
+
+impl<'de, T: Deserialize<'de>> Deserialize<'de> for Capture<T> {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        T::deserialize(deserializer).map(Capture)
     }
 }
