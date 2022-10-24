@@ -1,3 +1,4 @@
+use crate::browser::Capture;
 use crate::browser::Effect;
 use crate::browser::Subscription;
 use crate::browser::SubscriptionMsg;
@@ -12,10 +13,7 @@ pub struct Interval<Msg, AppEffect> {
     msg: SubscriptionMsg<Msg, AppEffect>,
 }
 
-pub fn interval<Msg, AppEffect>(
-    duration: Duration,
-    msg: Msg,
-) -> Subscription<Msg, AppEffect> {
+pub fn interval<Msg, AppEffect>(duration: Duration, msg: Msg) -> Subscription<Msg, AppEffect> {
     Subscription::Interval(Interval {
         id: format!("interval-{}", duration.as_millis()),
         duration: duration.as_millis(),
@@ -29,7 +27,7 @@ pub fn interval_effect<Msg, AppEffect, ToMsg>(
     effect: Effect<Msg, AppEffect>,
 ) -> Subscription<Msg, AppEffect>
 where
-    ToMsg: Fn(Value) -> Msg,
+    ToMsg: Fn(Capture<Value>) -> Msg,
 {
     Subscription::Interval(Interval {
         id: format!("interval-{}", duration.as_millis()),

@@ -3,6 +3,7 @@ use crate::browser::keyboard::Key;
 use crate::browser::keyboard::KeyCombo;
 use crate::browser::selector::Selector;
 use crate::browser::Button;
+use crate::browser::Capture;
 use crate::browser::DomId;
 use crate::browser::Subscription;
 use crate::browser::SubscriptionMsg;
@@ -80,7 +81,7 @@ pub fn on_click_data_string<Msg, AppEffect, ToMsg>(
     to_msg: ToMsg,
 ) -> Subscription<Msg, AppEffect>
 where
-    ToMsg: Fn(String) -> Msg,
+    ToMsg: Fn(Capture<String>) -> Msg,
 {
     let selector = Selector::data(name);
     let effect = dom::get_target_data_string_value(name);
@@ -103,7 +104,7 @@ pub fn on_click_closest_data_string<Msg, AppEffect, ToMsg>(
     to_msg: ToMsg,
 ) -> Subscription<Msg, AppEffect>
 where
-    ToMsg: Fn(String) -> Msg,
+    ToMsg: Fn(Capture<String>) -> Msg,
 {
     let selector = Selector::data(name);
     let effect = dom::get_target_data_string_value(name);
@@ -148,7 +149,7 @@ where
 pub fn on_input<Id, Msg, AppEffect, ToMsg>(id: Id, to_msg: ToMsg) -> Subscription<Msg, AppEffect>
 where
     Id: DomId,
-    ToMsg: Fn(String) -> Msg,
+    ToMsg: Fn(Capture<String>) -> Msg,
 {
     Subscription::EventListener(EventListener {
         id: id.to_string(),
@@ -168,7 +169,7 @@ where
 pub fn on_change<Id, Msg, AppEffect, ToMsg>(id: Id, to_msg: ToMsg) -> Subscription<Msg, AppEffect>
 where
     Id: DomId,
-    ToMsg: Fn(Value) -> Msg,
+    ToMsg: Fn(Capture<Value>) -> Msg,
 {
     Subscription::EventListener(EventListener {
         id: id.to_string(),
@@ -191,7 +192,7 @@ pub fn on_change_string<Id, Msg, AppEffect, ToMsg>(
 ) -> Subscription<Msg, AppEffect>
 where
     Id: DomId,
-    ToMsg: Fn(String) -> Msg,
+    ToMsg: Fn(Capture<String>) -> Msg,
 {
     Subscription::EventListener(EventListener {
         id: id.to_string(),
@@ -213,7 +214,7 @@ pub fn on_radio_change_string<Msg, AppEffect, ToMsg>(
     to_msg: ToMsg,
 ) -> Subscription<Msg, AppEffect>
 where
-    ToMsg: Fn(String) -> Msg,
+    ToMsg: Fn(Capture<String>) -> Msg,
 {
     let selector = Selector::radio_group(name);
     let effect = dom::get_radio_group_string_value(&selector);
@@ -237,7 +238,7 @@ pub fn on_radio_change_json<Id, Msg, AppEffect, ToMsg>(
 ) -> Subscription<Msg, AppEffect>
 where
     Id: DomId,
-    ToMsg: Fn(String) -> Msg,
+    ToMsg: Fn(Capture<String>) -> Msg,
 {
     let selector = Selector::radio_group(name);
     let effect = dom::get_radio_group_json_value(&selector);
@@ -280,7 +281,7 @@ pub fn on_keyup_element<Id, Msg, AppEffect, ToMsg>(
 ) -> Subscription<Msg, AppEffect>
 where
     Id: DomId,
-    ToMsg: Fn(String) -> Msg,
+    ToMsg: Fn(Capture<String>) -> Msg,
 {
     Subscription::EventListener(EventListener {
         id: id.to_string(),
@@ -313,7 +314,7 @@ pub fn on_keyup_document<Msg, AppEffect>(key: Key, msg: Msg) -> Subscription<Msg
 
 pub fn on_window_resize<Msg, AppEffect, ToMsg>(to_msg: ToMsg) -> Subscription<Msg, AppEffect>
 where
-    ToMsg: Fn(Value) -> Msg,
+    ToMsg: Fn(Capture<Value>) -> Msg,
 {
     Subscription::EventListener(EventListener {
         id: "window-resize".to_string(),
