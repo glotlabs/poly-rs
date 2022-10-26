@@ -12,9 +12,10 @@ pub enum LocalStorage {
     SetItem { key: String, value: Value },
 }
 
-pub fn get_item<Msg, AppEffect, ToMsg>(key: &str, to_msg: ToMsg) -> Effect<Msg, AppEffect>
+pub fn get_item<Msg, AppEffect, ToMsg, T>(key: &str, to_msg: ToMsg) -> Effect<Msg, AppEffect>
 where
-    ToMsg: Fn(Capture<Value>) -> Msg,
+    ToMsg: Fn(Capture<T>) -> Msg,
+    T: Default,
 {
     let msg = to_msg(Default::default());
     let effect = Effect::LocalStorage(LocalStorage::GetItem {

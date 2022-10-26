@@ -7,7 +7,6 @@ use crate::browser::Capture;
 use crate::browser::DomId;
 use crate::browser::Subscription;
 use crate::browser::SubscriptionMsg;
-use crate::browser::Value;
 
 #[derive(Clone, serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -166,10 +165,14 @@ where
     })
 }
 
-pub fn on_change<Id, Msg, AppEffect, ToMsg>(id: Id, to_msg: ToMsg) -> Subscription<Msg, AppEffect>
+pub fn on_change<Id, Msg, AppEffect, ToMsg, T>(
+    id: Id,
+    to_msg: ToMsg,
+) -> Subscription<Msg, AppEffect>
 where
     Id: DomId,
-    ToMsg: Fn(Capture<Value>) -> Msg,
+    ToMsg: Fn(Capture<T>) -> Msg,
+    T: Default,
 {
     Subscription::EventListener(EventListener {
         id: id.to_string(),
@@ -312,9 +315,10 @@ pub fn on_keyup_document<Msg, AppEffect>(key: Key, msg: Msg) -> Subscription<Msg
     })
 }
 
-pub fn on_window_resize<Msg, AppEffect, ToMsg>(to_msg: ToMsg) -> Subscription<Msg, AppEffect>
+pub fn on_window_resize<Msg, AppEffect, ToMsg, T>(to_msg: ToMsg) -> Subscription<Msg, AppEffect>
 where
-    ToMsg: Fn(Capture<Value>) -> Msg,
+    ToMsg: Fn(Capture<T>) -> Msg,
+    T: Default,
 {
     Subscription::EventListener(EventListener {
         id: "window-resize".to_string(),

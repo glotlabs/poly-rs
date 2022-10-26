@@ -2,7 +2,6 @@ use crate::browser::Capture;
 use crate::browser::Effect;
 use crate::browser::Subscription;
 use crate::browser::SubscriptionMsg;
-use crate::browser::Value;
 use std::time::Duration;
 
 #[derive(Clone, serde::Serialize)]
@@ -21,13 +20,14 @@ pub fn interval<Msg, AppEffect>(duration: Duration, msg: Msg) -> Subscription<Ms
     })
 }
 
-pub fn interval_effect<Msg, AppEffect, ToMsg>(
+pub fn interval_effect<Msg, AppEffect, ToMsg, T>(
     duration: Duration,
     to_msg: ToMsg,
     effect: Effect<Msg, AppEffect>,
 ) -> Subscription<Msg, AppEffect>
 where
-    ToMsg: Fn(Capture<Value>) -> Msg,
+    ToMsg: Fn(Capture<T>) -> Msg,
+    T: Default,
 {
     Subscription::Interval(Interval {
         id: format!("interval-{}", duration.as_millis()),
