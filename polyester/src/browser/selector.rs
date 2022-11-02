@@ -15,6 +15,10 @@ impl Selector {
     pub fn data(name: &str) -> Selector {
         Selector(format!("[data-{}]", name))
     }
+
+    pub fn data_value(key: &str, value: &str) -> Selector {
+        Selector(format!("[data-{}=\"{}\"]", key, value))
+    }
 }
 
 impl fmt::Display for Selector {

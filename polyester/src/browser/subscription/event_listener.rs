@@ -5,6 +5,7 @@ use crate::browser::selector::Selector;
 use crate::browser::Button;
 use crate::browser::Capture;
 use crate::browser::DomId;
+use crate::browser::Effect;
 use crate::browser::Subscription;
 use crate::browser::SubscriptionMsg;
 
@@ -75,18 +76,17 @@ where
     })
 }
 
-pub fn on_click_data_string<Msg, AppEffect, ToMsg>(
-    name: &str,
+pub fn on_click_selector<Msg, AppEffect, ToMsg, T>(
+    selector: Selector,
+    effect: Effect<Msg, AppEffect>,
     to_msg: ToMsg,
 ) -> Subscription<Msg, AppEffect>
 where
-    ToMsg: Fn(Capture<String>) -> Msg,
+    ToMsg: Fn(Capture<T>) -> Msg,
+    T: Default,
 {
-    let selector = Selector::data(name);
-    let effect = dom::get_target_data_string_value(name);
-
     Subscription::EventListener(EventListener {
-        id: format!("data-{}", name),
+        id: format!("on-click-selector-{}", selector),
         listen_target: ListenTarget::Document,
         matchers: vec![EventMatcher::ExactSelector { selector }],
         event_type: EventType::Click,
@@ -98,18 +98,17 @@ where
     })
 }
 
-pub fn on_click_closest_data_string<Msg, AppEffect, ToMsg>(
-    name: &str,
+pub fn on_click_selector_closest<Msg, AppEffect, ToMsg, T>(
+    selector: Selector,
+    effect: Effect<Msg, AppEffect>,
     to_msg: ToMsg,
 ) -> Subscription<Msg, AppEffect>
 where
-    ToMsg: Fn(Capture<String>) -> Msg,
+    ToMsg: Fn(Capture<T>) -> Msg,
+    T: Default,
 {
-    let selector = Selector::data(name);
-    let effect = dom::get_target_data_string_value(name);
-
     Subscription::EventListener(EventListener {
-        id: format!("data-{}", name),
+        id: format!("selector-closest-{}", selector),
         listen_target: ListenTarget::Document,
         matchers: vec![EventMatcher::ClosestSelector { selector }],
         event_type: EventType::Click,
