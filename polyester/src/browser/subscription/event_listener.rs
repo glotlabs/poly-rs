@@ -211,6 +211,28 @@ where
     })
 }
 
+pub fn on_change_selector<Msg, AppEffect, ToMsg, T>(
+    selector: Selector,
+    to_msg: ToMsg,
+    effect: Effect<Msg, AppEffect>,
+) -> Subscription<Msg, AppEffect>
+where
+    ToMsg: Fn(Capture<T>) -> Msg,
+    T: Default,
+{
+    Subscription::EventListener(EventListener {
+        id: format!("on-change-selector-{}", selector),
+        listen_target: ListenTarget::Document,
+        matchers: vec![EventMatcher::ExactSelector { selector }],
+        event_type: EventType::Change,
+        msg: SubscriptionMsg::effectful(to_msg, effect),
+        propagation: EventPropagation {
+            stop_propagation: true,
+            prevent_default: true,
+        },
+    })
+}
+
 pub fn on_radio_change_string<Msg, AppEffect, ToMsg>(
     name: &str,
     to_msg: ToMsg,

@@ -1,6 +1,7 @@
 pub mod dom_id;
 pub mod effect;
 pub mod event;
+pub mod file;
 pub mod keyboard;
 pub mod mouse;
 pub mod selector;
@@ -11,6 +12,7 @@ pub use crate::browser::dom_id::*;
 pub use crate::browser::effect::*;
 pub use crate::browser::event::*;
 pub use crate::browser::event_listener::*;
+pub use crate::browser::file::*;
 pub use crate::browser::interval::*;
 pub use crate::browser::keyboard::*;
 pub use crate::browser::mouse::*;

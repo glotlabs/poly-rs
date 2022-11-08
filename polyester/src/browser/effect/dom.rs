@@ -30,6 +30,10 @@ pub enum Dom {
         name: String,
         parse_as_json: bool,
     },
+    #[serde(rename_all = "camelCase")]
+    GetFiles {
+        element_id: String,
+    },
     GetWindowSize,
     #[serde(rename_all = "camelCase")]
     DispatchEvent {
@@ -89,6 +93,15 @@ pub fn get_radio_group_string_value<Msg, AppEffect>(selector: &Selector) -> Effe
     Effect::Dom(Dom::GetRadioGroupValue {
         selector: selector.clone(),
         parse_as_json: false,
+    })
+}
+
+pub fn get_files<Msg, AppEffect, Id>(id: Id) -> Effect<Msg, AppEffect>
+where
+    Id: DomId,
+{
+    Effect::Dom(Dom::GetFiles {
+        element_id: id.to_string(),
     })
 }
 
