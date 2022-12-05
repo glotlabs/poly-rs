@@ -57,7 +57,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "18a6dbe30758c9f83eb00cbea4ac95966305f5a7772f3f42ebfc7fc7eddbd8e1"
 
 [[package]]
-name = "polyester"
+name = "poly"
 version = "0.1.0"
 dependencies = [
  "maud",
@@ -67,7 +67,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "polyester_macro"
+name = "poly_macro"
 version = "0.1.0"
 dependencies = [
  "quote",

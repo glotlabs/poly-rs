@@ -1,7 +1,7 @@
 [workspace]
 
 members = [
-    "polyester",
-    "polyester_macro",
+    "poly",
+    "poly_macro",
 ]
 
