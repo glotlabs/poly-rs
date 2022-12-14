@@ -9,7 +9,7 @@ where
     Msg: serde::Serialize,
     AppEffect: serde::Serialize,
 {
-    let (model, effects) = page.init();
+    let (model, effects) = page.init()?;
     encode_model_and_effects(&ModelAndEffects { model, effects })
 }
 
