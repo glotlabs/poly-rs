@@ -1,6 +1,10 @@
 use crate::page::Effects;
 use crate::page::Page;
+use serde::Serialize;
 use wasm_bindgen::prelude::*;
+
+const JSON_SERIALIZER: serde_wasm_bindgen::Serializer =
+    serde_wasm_bindgen::Serializer::json_compatible();
 
 pub fn init<P, Model, Msg, AppEffect, Markup>(page: &P) -> Result<JsValue, JsValue>
 where
@@ -62,6 +66,17 @@ where
     encode_model_and_effects(&ModelAndEffects { model, effects })
 }
 
+pub fn encode_js_value(value: impl Serialize) -> Result<JsValue, serde_wasm_bindgen::Error> {
+    value.serialize(&JSON_SERIALIZER)
+}
+
+pub fn decode_js_value<T>(js_value: &JsValue) -> Result<T, serde_wasm_bindgen::Error>
+where
+    T: serde::de::DeserializeOwned,
+{
+    serde_wasm_bindgen::from_value(js_value.clone())
+}
+
 fn encode_model_and_effects<Model, Msg, AppEffect>(
     model_and_effects: &ModelAndEffects<Model, Msg, AppEffect>,
 ) -> Result<JsValue, JsValue>
@@ -70,7 +85,7 @@ where
     Msg: serde::Serialize,
     AppEffect: serde::Serialize,
 {
-    JsValue::from_serde(&model_and_effects)
+    encode_js_value(model_and_effects)
         .map_err(|err| format!("Failed to encode model and effects: {}", err).into())
 }
 
@@ -78,7 +93,7 @@ fn encode_subscriptions<Subscriptions>(subscriptions: Subscriptions) -> Result<J
 where
     Subscriptions: serde::Serialize,
 {
-    JsValue::from_serde(&subscriptions)
+    encode_js_value(subscriptions)
         .map_err(|err| format!("Failed to encode subscriptions: {}", err).into())
 }
 
@@ -86,18 +101,14 @@ fn decode_model<Model>(js_model: &JsValue) -> Result<Model, JsValue>
 where
     Model: serde::de::DeserializeOwned,
 {
-    js_model
-        .into_serde()
-        .map_err(|err| format!("Failed to decode model: {}", err).into())
+    decode_js_value(js_model).map_err(|err| format!("Failed to decode model: {}", err).into())
 }
 
 fn decode_msg<Msg>(js_msg: &JsValue) -> Result<Msg, JsValue>
 where
     Msg: serde::de::DeserializeOwned,
 {
-    js_msg
-        .into_serde()
-        .map_err(|err| format!("Failed to decode msg: {}", err).into())
+    decode_js_value(js_msg).map_err(|err| format!("Failed to decode msg: {}", err).into())
 }
 
 #[derive(Clone, serde::Serialize)]
