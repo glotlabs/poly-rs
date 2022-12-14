@@ -70,7 +70,7 @@ pub fn encode_js_value(value: impl Serialize) -> Result<JsValue, serde_wasm_bind
     value.serialize(&JSON_SERIALIZER)
 }
 
-pub fn decode_js_value<T>(js_value: &JsValue) -> Result<T, serde_wasm_bindgen::Error>
+pub fn decode_js_value<T>(js_value: JsValue) -> Result<T, serde_wasm_bindgen::Error>
 where
     T: serde::de::DeserializeOwned,
 {
@@ -101,14 +101,15 @@ fn decode_model<Model>(js_model: &JsValue) -> Result<Model, JsValue>
 where
     Model: serde::de::DeserializeOwned,
 {
-    decode_js_value(js_model).map_err(|err| format!("Failed to decode model: {}", err).into())
+    decode_js_value(js_model.clone())
+        .map_err(|err| format!("Failed to decode model: {}", err).into())
 }
 
 fn decode_msg<Msg>(js_msg: &JsValue) -> Result<Msg, JsValue>
 where
     Msg: serde::de::DeserializeOwned,
 {
-    decode_js_value(js_msg).map_err(|err| format!("Failed to decode msg: {}", err).into())
+    decode_js_value(js_msg.clone()).map_err(|err| format!("Failed to decode msg: {}", err).into())
 }
 
 #[derive(Clone, serde::Serialize)]
