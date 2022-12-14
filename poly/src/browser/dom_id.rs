@@ -6,3 +6,5 @@ pub trait DomId: Display {
         Selector::id(&self.to_string())
     }
 }
+
+impl<T> DomId for &T where T: DomId {}
