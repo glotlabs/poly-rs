@@ -31,7 +31,7 @@ pub fn impl_wasm_page(args: TokenStream) -> TokenStream {
                 wasm::init(&self.0)
             }
 
-            #[wasm_bindgen(js_name = viewBody)]
+            #[wasm_bindgen(js_name = view)]
             pub fn view(&self, js_model: &JsValue) -> Result<String, JsValue> {
                 wasm::view(&self.0, js_model)
             }
