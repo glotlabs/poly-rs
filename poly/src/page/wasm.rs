@@ -17,6 +17,20 @@ where
     encode_model_and_effects(&ModelAndEffects { model, effects })
 }
 
+pub fn view<P, Model, Msg, AppEffect, Markup>(
+    page: &P,
+    js_model: &JsValue,
+) -> Result<String, JsValue>
+where
+    P: Page<Model, Msg, AppEffect, Markup>,
+    Model: serde::de::DeserializeOwned,
+{
+    let model = decode_model(js_model)?;
+    let markup = page.view(&model);
+
+    Ok(page.render_page(markup))
+}
+
 pub fn view_body<P, Model, Msg, AppEffect, Markup>(
     page: &P,
     js_model: &JsValue,

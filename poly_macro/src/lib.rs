@@ -32,6 +32,11 @@ pub fn impl_wasm_page(args: TokenStream) -> TokenStream {
             }
 
             #[wasm_bindgen(js_name = viewBody)]
+            pub fn view(&self, js_model: &JsValue) -> Result<String, JsValue> {
+                wasm::view(&self.0, js_model)
+            }
+
+            #[wasm_bindgen(js_name = viewBody)]
             pub fn view_body(&self, js_model: &JsValue) -> Result<String, JsValue> {
                 wasm::view_body(&self.0, js_model)
             }
