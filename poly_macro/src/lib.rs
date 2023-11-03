@@ -51,7 +51,7 @@ pub fn impl_wasm_page(args: TokenStream) -> TokenStream {
                 wasm::update(&self.0, js_msg, js_model)
             }
 
-            #[wasm_bindgen(js_name = "sendMessage")]
+            #[wasm_bindgen(js_name = "updateFromJs")]
             pub fn update_from_js(&self, js_msg: &JsValue, js_model: &JsValue) -> Result<JsValue, JsValue> {
                 wasm::update_from_js(&self.0, js_msg, js_model)
             }
