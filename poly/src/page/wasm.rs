@@ -96,7 +96,7 @@ where
 {
     let msg = decode_value(js_msg)?;
     let mut model = decode_model(js_model)?;
-    let effects = page.update_from_js(&msg, &mut model)?;
+    let effects = page.update_from_js(msg, &mut model)?;
 
     encode_model_and_effects(&ModelAndEffects { model, effects })
 }
