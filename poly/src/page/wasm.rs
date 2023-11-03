@@ -1,4 +1,5 @@
 use crate::page::Effects;
+use crate::page::JsMsg;
 use crate::page::Page;
 use serde::Serialize;
 use wasm_bindgen::prelude::*;
@@ -146,7 +147,7 @@ where
     decode_js_value(js_msg.clone()).map_err(|err| format!("Failed to decode msg: {}", err).into())
 }
 
-fn decode_value(js_msg: &JsValue) -> Result<serde_json::Value, JsValue> {
+fn decode_value(js_msg: &JsValue) -> Result<JsMsg, JsValue> {
     decode_js_value(js_msg.clone()).map_err(|err| format!("Failed to decode msg: {}", err).into())
 }
 

@@ -12,7 +12,7 @@ pub trait Page<Model, Msg, AppEffect, Markup> {
     fn update(&self, msg: &Msg, model: &mut Model) -> Result<Effects<Msg, AppEffect>, String>;
     fn update_from_js(
         &self,
-        _msg: &serde_json::Value,
+        _msg: &JsMsg,
         _model: &mut Model,
     ) -> Result<Effects<Msg, AppEffect>, String> {
         Ok(vec![])
@@ -20,6 +20,14 @@ pub trait Page<Model, Msg, AppEffect, Markup> {
     fn view(&self, model: &Model) -> PageMarkup<Markup>;
     fn render(&self, markup: Markup) -> String;
     fn render_page(&self, markup: PageMarkup<Markup>) -> String;
+}
+
+#[derive(Clone, serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct JsMsg {
+    #[serde(rename = "type")]
+    pub type_: String,
+    pub data: serde_json::Value,
 }
 
 pub struct PageMarkup<Html> {
