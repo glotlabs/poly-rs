@@ -80,6 +80,26 @@ where
     encode_model_and_effects(&ModelAndEffects { model, effects })
 }
 
+pub fn update_from_js<P, Model, Msg, AppEffect, Markup>(
+    page: &P,
+    js_msg: &JsValue,
+    js_model: &JsValue,
+) -> Result<JsValue, JsValue>
+where
+    P: Page<Model, Msg, AppEffect, Markup>,
+    Msg: serde::Serialize,
+    Msg: serde::de::DeserializeOwned,
+    Model: serde::de::DeserializeOwned,
+    Model: serde::Serialize,
+    AppEffect: serde::Serialize,
+{
+    let msg = decode_value(js_msg)?;
+    let mut model = decode_model(js_model)?;
+    let effects = page.update_from_js(&msg, &mut model)?;
+
+    encode_model_and_effects(&ModelAndEffects { model, effects })
+}
+
 pub fn encode_js_value(value: impl Serialize) -> Result<JsValue, serde_wasm_bindgen::Error> {
     value.serialize(&JSON_SERIALIZER)
 }
@@ -123,6 +143,10 @@ fn decode_msg<Msg>(js_msg: &JsValue) -> Result<Msg, JsValue>
 where
     Msg: serde::de::DeserializeOwned,
 {
+    decode_js_value(js_msg.clone()).map_err(|err| format!("Failed to decode msg: {}", err).into())
+}
+
+fn decode_value(js_msg: &JsValue) -> Result<serde_json::Value, JsValue> {
     decode_js_value(js_msg.clone()).map_err(|err| format!("Failed to decode msg: {}", err).into())
 }
 

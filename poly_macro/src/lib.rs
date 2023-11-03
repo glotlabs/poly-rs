@@ -21,34 +21,39 @@ pub fn impl_wasm_page(args: TokenStream) -> TokenStream {
     TokenStream::from(quote!(
         #[wasm_bindgen]
         impl #name_ident {
-            #[wasm_bindgen(js_name = id)]
+            #[wasm_bindgen(js_name = "id")]
             pub fn id(&self) -> Result<String, JsValue> {
                 Ok(self.0.id().to_string())
             }
 
-            #[wasm_bindgen(js_name = init)]
+            #[wasm_bindgen(js_name = "init")]
             pub fn initial_model(&self) -> Result<JsValue, JsValue> {
                 wasm::init(&self.0)
             }
 
-            #[wasm_bindgen(js_name = view)]
+            #[wasm_bindgen(js_name = "view")]
             pub fn view(&self, js_model: &JsValue) -> Result<String, JsValue> {
                 wasm::view(&self.0, js_model)
             }
 
-            #[wasm_bindgen(js_name = viewBody)]
+            #[wasm_bindgen(js_name = "viewBody")]
             pub fn view_body(&self, js_model: &JsValue) -> Result<String, JsValue> {
                 wasm::view_body(&self.0, js_model)
             }
 
-            #[wasm_bindgen(js_name = getSubscriptions)]
+            #[wasm_bindgen(js_name = "getSubscriptions")]
             pub fn get_subscriptions(&self, js_model: &JsValue) -> Result<JsValue, JsValue> {
                 wasm::get_subscriptions(&self.0, js_model)
             }
 
-            #[wasm_bindgen(js_name = update)]
+            #[wasm_bindgen(js_name = "update")]
             pub fn update(&self, js_msg: &JsValue, js_model: &JsValue) -> Result<JsValue, JsValue> {
                 wasm::update(&self.0, js_msg, js_model)
+            }
+
+            #[wasm_bindgen(js_name = "sendMessage")]
+            pub fn update_from_js(&self, js_msg: &JsValue, js_model: &JsValue) -> Result<JsValue, JsValue> {
+                wasm::update_from_js(&self.0, js_msg, js_model)
             }
         }
     ))

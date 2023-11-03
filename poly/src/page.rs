@@ -10,6 +10,13 @@ pub trait Page<Model, Msg, AppEffect, Markup> {
     fn init(&self) -> Result<(Model, Effects<Msg, AppEffect>), String>;
     fn subscriptions(&self, model: &Model) -> Subscriptions<Msg, AppEffect>;
     fn update(&self, msg: &Msg, model: &mut Model) -> Result<Effects<Msg, AppEffect>, String>;
+    fn update_from_js(
+        &self,
+        _msg: &serde_json::Value,
+        _model: &mut Model,
+    ) -> Result<Effects<Msg, AppEffect>, String> {
+        Ok(vec![])
+    }
     fn view(&self, model: &Model) -> PageMarkup<Markup>;
     fn render(&self, markup: Markup) -> String;
     fn render_page(&self, markup: PageMarkup<Markup>) -> String;
