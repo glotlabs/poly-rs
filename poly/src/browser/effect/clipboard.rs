@@ -4,6 +4,7 @@ use crate::browser::Effect;
 #[serde(tag = "type", content = "config")]
 #[serde(rename_all = "camelCase")]
 pub enum Clipboard {
+    #[serde(rename_all = "camelCase")]
     WriteText {
         text: String,
         result_msg_name: String,
