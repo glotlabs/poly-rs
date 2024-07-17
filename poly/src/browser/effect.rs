@@ -1,3 +1,4 @@
+pub mod browser;
 pub mod clipboard;
 pub mod console;
 pub mod dom;
@@ -7,6 +8,7 @@ pub mod navigation;
 pub mod time;
 
 use crate::browser::dom::Dom;
+use crate::browser::effect::browser::*;
 use crate::browser::effect::clipboard::*;
 use crate::browser::effect::console::Console;
 use crate::browser::effect::local_storage::*;
@@ -28,6 +30,7 @@ pub enum Effect<Msg, AppEffect> {
     LocalStorage(LocalStorage),
     Console(Console),
     Clipboard(Clipboard),
+    Browser(Browser),
     App(AppEffect),
 }
 
