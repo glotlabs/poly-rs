@@ -8,14 +8,14 @@ use std::time::Duration;
 #[serde(rename_all = "camelCase")]
 pub struct Interval<Msg, AppEffect> {
     id: String,
-    duration: u128,
+    duration: u64,
     msg: SubscriptionMsg<Msg, AppEffect>,
 }
 
 pub fn interval<Msg, AppEffect>(duration: Duration, msg: Msg) -> Subscription<Msg, AppEffect> {
     Subscription::Interval(Interval {
         id: format!("interval-{}", duration.as_millis()),
-        duration: duration.as_millis(),
+        duration: duration.as_millis() as u64,
         msg: SubscriptionMsg::pure(msg),
     })
 }
@@ -31,7 +31,7 @@ where
 {
     Subscription::Interval(Interval {
         id: format!("interval-{}", duration.as_millis()),
-        duration: duration.as_millis(),
+        duration: duration.as_millis() as u64,
         msg: SubscriptionMsg::effectful(to_msg, effect),
     })
 }
