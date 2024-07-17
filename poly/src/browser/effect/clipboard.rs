@@ -1,19 +1,29 @@
-use crate::browser::Effect;
+use crate::browser::effectful_msg::effectful_msg;
+use crate::browser::{Capture, Effect};
 
 #[derive(Clone, serde::Serialize, serde::Deserialize)]
 #[serde(tag = "type", content = "config")]
 #[serde(rename_all = "camelCase")]
 pub enum Clipboard {
     #[serde(rename_all = "camelCase")]
-    WriteText {
-        text: String,
-        result_msg_name: String,
-    },
+    WriteText { text: String },
 }
 
-pub fn write_text<Msg, AppEffect>(s: &str, result_msg_name: &str) -> Effect<Msg, AppEffect> {
-    Effect::Clipboard(Clipboard::WriteText {
+pub fn write_text<Msg, AppEffect, ToMsg>(s: &str, to_msg: ToMsg) -> Effect<Msg, AppEffect>
+where
+    ToMsg: Fn(Capture<WriteTextResult>) -> Msg,
+{
+    let effect = Effect::Clipboard(Clipboard::WriteText {
         text: s.to_string(),
-        result_msg_name: result_msg_name.to_string(),
-    })
+    });
+
+    let msg = to_msg(Default::default());
+
+    effectful_msg(msg, effect)
+}
+
+#[derive(Clone, Default, serde::Deserialize)]
+pub struct WriteTextResult {
+    pub success: bool,
+    pub error: Option<String>,
 }
