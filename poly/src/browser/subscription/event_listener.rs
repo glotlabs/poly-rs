@@ -1,6 +1,5 @@
 use crate::browser::dom;
 use crate::browser::keyboard::Key;
-use crate::browser::keyboard::KeyCombo;
 use crate::browser::selector::Selector;
 use crate::browser::Button;
 use crate::browser::Capture;
@@ -34,10 +33,6 @@ pub enum EventMatcher {
         key: Key,
         requires_ctrl: bool,
         requires_meta: bool,
-    },
-    // TODO: remove?
-    KeyCombo {
-        combo: KeyCombo,
     },
 }
 
