@@ -7,6 +7,7 @@ use crate::browser::DomId;
 use crate::browser::Effect;
 use crate::browser::Subscription;
 use crate::browser::SubscriptionMsg;
+use std::fmt;
 
 #[derive(Clone, serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -58,6 +59,20 @@ impl ModifierKey {
             ModifierKey::Meta => true,
             ModifierKey::Multiple(keys) => keys.iter().any(Self::requires_meta),
             _ => false,
+        }
+    }
+}
+
+impl fmt::Display for ModifierKey {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            ModifierKey::None => write!(f, "no-modifier"),
+            ModifierKey::Ctrl => write!(f, "ctrl"),
+            ModifierKey::Meta => write!(f, "meta"),
+            ModifierKey::Multiple(keys) => {
+                let keys: Vec<String> = keys.iter().map(|key| key.to_string()).collect();
+                write!(f, "{}", keys.join("-"))
+            }
         }
     }
 }
@@ -381,9 +396,9 @@ pub fn on_keydown<Msg, AppEffect>(
     msg: Msg,
 ) -> Subscription<Msg, AppEffect> {
     Subscription::EventListener(EventListener {
-        id: format!("keyboard-keydown-{}", key),
+        id: format!("keyboard-keydown-{}-{}", key, modifier),
         listen_target: ListenTarget::Document,
-        event_type: EventType::KeyDown,
+        event_type: EventType::Keydown,
         matchers: vec![EventMatcher::KeyboardKey {
             key,
             requires_ctrl: modifier.requires_ctrl(),
@@ -431,6 +446,6 @@ pub enum EventType {
     Change,
     Submit,
     Keyup,
-    KeyDown,
+    Keydown,
     Resize,
 }
