@@ -29,7 +29,7 @@ pub struct DebounceConfig {
     trailing: bool,
 }
 
-#[derive(Clone, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Default, serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct WindowSize {
     pub width: u32,
