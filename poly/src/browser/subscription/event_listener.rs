@@ -20,11 +20,51 @@ pub enum ListenTarget {
 #[serde(tag = "type", content = "config")]
 #[serde(rename_all = "camelCase")]
 pub enum EventMatcher {
-    ExactSelector { selector: Selector },
-    ClosestSelector { selector: Selector },
-    MouseButton { button: Button },
-    KeyboardKey { key: Key },
-    KeyCombo { combo: KeyCombo },
+    ExactSelector {
+        selector: Selector,
+    },
+    ClosestSelector {
+        selector: Selector,
+    },
+    MouseButton {
+        button: Button,
+    },
+    #[serde(rename_all = "camelCase")]
+    KeyboardKey {
+        key: Key,
+        requires_ctrl: bool,
+        requires_meta: bool,
+    },
+    // TODO: remove?
+    KeyCombo {
+        combo: KeyCombo,
+    },
+}
+
+#[derive(Clone)]
+pub enum ModifierKey {
+    None,
+    Ctrl,
+    Meta,
+    Multiple(Vec<ModifierKey>),
+}
+
+impl ModifierKey {
+    pub fn requires_ctrl(&self) -> bool {
+        match self {
+            ModifierKey::Ctrl => true,
+            ModifierKey::Multiple(keys) => keys.iter().any(Self::requires_ctrl),
+            _ => false,
+        }
+    }
+
+    pub fn requires_meta(&self) -> bool {
+        match self {
+            ModifierKey::Meta => true,
+            ModifierKey::Multiple(keys) => keys.iter().any(Self::requires_meta),
+            _ => false,
+        }
+    }
 }
 
 #[derive(Clone, serde::Serialize)]
@@ -322,12 +362,38 @@ where
     })
 }
 
-pub fn on_keyup_document<Msg, AppEffect>(key: Key, msg: Msg) -> Subscription<Msg, AppEffect> {
+pub fn on_keyup<Msg, AppEffect>(key: Key, msg: Msg) -> Subscription<Msg, AppEffect> {
     Subscription::EventListener(EventListener {
-        id: format!("keyboard-key-{}", key),
+        id: format!("keyboard-keyup-{}", key),
         listen_target: ListenTarget::Document,
         event_type: EventType::Keyup,
-        matchers: vec![EventMatcher::KeyboardKey { key }],
+        matchers: vec![EventMatcher::KeyboardKey {
+            key,
+            requires_ctrl: false,
+            requires_meta: false,
+        }],
+        msg: SubscriptionMsg::pure(msg),
+        propagation: EventPropagation {
+            stop_propagation: false,
+            prevent_default: false,
+        },
+    })
+}
+
+pub fn on_keydown<Msg, AppEffect>(
+    key: Key,
+    modifier: ModifierKey,
+    msg: Msg,
+) -> Subscription<Msg, AppEffect> {
+    Subscription::EventListener(EventListener {
+        id: format!("keyboard-keydown-{}", key),
+        listen_target: ListenTarget::Document,
+        event_type: EventType::KeyDown,
+        matchers: vec![EventMatcher::KeyboardKey {
+            key,
+            requires_ctrl: modifier.requires_ctrl(),
+            requires_meta: modifier.requires_meta(),
+        }],
         msg: SubscriptionMsg::pure(msg),
         propagation: EventPropagation {
             stop_propagation: false,
@@ -370,5 +436,6 @@ pub enum EventType {
     Change,
     Submit,
     Keyup,
+    KeyDown,
     Resize,
 }
