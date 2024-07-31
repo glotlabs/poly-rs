@@ -1,8 +1,8 @@
 use crate::browser;
-use crate::browser::effectful_msg::effectful_msg;
-use crate::browser::Capture;
-use crate::browser::Effect;
-use crate::browser::Value;
+use crate::browser::effect::effectful_msg::effectful_msg;
+use crate::browser::effect::Effect;
+use crate::browser::value::Capture;
+use crate::browser::value::Value;
 
 #[derive(Clone, serde::Serialize, serde::Deserialize)]
 #[serde(tag = "type", content = "config")]
@@ -36,7 +36,7 @@ where
 {
     let effect = Effect::LocalStorage(LocalStorage::SetItem {
         key: key.to_string(),
-        value: browser::to_value(value),
+        value: browser::value::to_value(value),
     });
 
     let msg = to_msg(Default::default());

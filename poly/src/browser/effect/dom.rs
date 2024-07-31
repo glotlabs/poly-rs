@@ -1,7 +1,7 @@
-use crate::browser::DomId;
-use crate::browser::Effect;
-use crate::browser::EventTarget;
-use crate::browser::Selector;
+use crate::browser::dom_id::DomId;
+use crate::browser::effect::Effect;
+use crate::browser::event::EventTarget;
+use crate::browser::selector::Selector;
 
 #[derive(Clone, serde::Serialize, serde::Deserialize)]
 #[serde(tag = "type", content = "config")]

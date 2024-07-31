@@ -7,14 +7,14 @@ pub mod local_storage;
 pub mod navigation;
 pub mod time;
 
-use crate::browser::dom::Dom;
-use crate::browser::effect::browser::*;
-use crate::browser::effect::clipboard::*;
+use crate::browser::effect::browser::Browser;
+use crate::browser::effect::clipboard::Clipboard;
 use crate::browser::effect::console::Console;
-use crate::browser::effect::local_storage::*;
-use crate::browser::effect::navigation::*;
-use crate::browser::effectful_msg::EffectfulMsg;
-use crate::browser::time::Time;
+use crate::browser::effect::dom::Dom;
+use crate::browser::effect::effectful_msg::EffectfulMsg;
+use crate::browser::effect::local_storage::LocalStorage;
+use crate::browser::effect::navigation::Navigation;
+use crate::browser::effect::time::Time;
 
 #[derive(Clone, serde::Serialize)]
 #[serde(tag = "type", content = "config")]
@@ -36,7 +36,7 @@ pub enum Effect<Msg, AppEffect> {
 impl<Msg, AppEffect> Effect<Msg, AppEffect> {
     pub fn into_vec(self) -> Vec<Effect<Msg, AppEffect>> {
         match self {
-            Effect::Batch(effects) => effects.into_iter().map(Self::into_vec).flatten().collect(),
+            Effect::Batch(effects) => effects.into_iter().flat_map(Self::into_vec).collect(),
 
             _ => vec![self],
         }

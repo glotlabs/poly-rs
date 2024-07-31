@@ -1,4 +1,4 @@
-use crate::browser::Effect;
+use crate::browser::effect::Effect;
 
 #[derive(Clone, serde::Serialize)]
 #[serde(rename_all = "camelCase")]

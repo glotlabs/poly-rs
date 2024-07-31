@@ -1,4 +1,4 @@
-use crate::browser::Effect;
+use crate::browser::effect::Effect;
 
 #[derive(Clone, serde::Serialize, serde::Deserialize)]
 #[serde(tag = "type", content = "config")]

@@ -1,7 +1,7 @@
-use crate::browser::Capture;
-use crate::browser::Effect;
-use crate::browser::Subscription;
-use crate::browser::SubscriptionMsg;
+use crate::browser::effect::Effect;
+use crate::browser::subscription::Subscription;
+use crate::browser::subscription::SubscriptionMsg;
+use crate::browser::value::Capture;
 use std::time::Duration;
 
 #[derive(Clone, serde::Serialize)]

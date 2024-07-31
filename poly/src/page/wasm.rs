@@ -1,4 +1,5 @@
-use crate::browser::Effect;
+use crate::browser::effect::Effect;
+use crate::browser::subscription::Subscription;
 use crate::page::JsMsg;
 use crate::page::Page;
 use serde::Serialize;
@@ -61,7 +62,7 @@ where
 {
     let model = decode_model(js_model)?;
     let subscriptions = page.subscriptions(&model);
-    encode_subscriptions(&subscriptions)
+    encode_subscriptions(subscriptions.into_vec())
 }
 
 pub fn update<P, Model, Msg, AppEffect, Markup>(
@@ -133,9 +134,12 @@ where
         .map_err(|err| format!("Failed to encode model and effects: {}", err).into())
 }
 
-fn encode_subscriptions<Subscriptions>(subscriptions: Subscriptions) -> Result<JsValue, JsValue>
+fn encode_subscriptions<Msg, AppEffect>(
+    subscriptions: Vec<Subscription<Msg, AppEffect>>,
+) -> Result<JsValue, JsValue>
 where
-    Subscriptions: serde::Serialize,
+    Msg: serde::Serialize,
+    AppEffect: serde::Serialize,
 {
     encode_js_value(subscriptions)
         .map_err(|err| format!("Failed to encode subscriptions: {}", err).into())

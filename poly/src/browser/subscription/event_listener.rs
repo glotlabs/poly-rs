@@ -1,12 +1,12 @@
-use crate::browser::dom;
+use crate::browser::dom_id::DomId;
+use crate::browser::effect::dom;
+use crate::browser::effect::Effect;
 use crate::browser::keyboard::Key;
+use crate::browser::mouse::Button;
 use crate::browser::selector::Selector;
-use crate::browser::Button;
-use crate::browser::Capture;
-use crate::browser::DomId;
-use crate::browser::Effect;
-use crate::browser::Subscription;
-use crate::browser::SubscriptionMsg;
+use crate::browser::subscription::Subscription;
+use crate::browser::subscription::SubscriptionMsg;
+use crate::browser::value::Capture;
 use std::fmt;
 
 #[derive(Clone, serde::Serialize, serde::Deserialize)]

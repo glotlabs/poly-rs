@@ -1,5 +1,6 @@
-use crate::browser::effectful_msg::effectful_msg;
-use crate::browser::{Capture, Effect};
+use crate::browser::effect::effectful_msg::effectful_msg;
+use crate::browser::effect::Effect;
+use crate::browser::value::Capture;
 
 #[derive(Clone, serde::Serialize, serde::Deserialize)]
 #[serde(tag = "type", content = "config")]
