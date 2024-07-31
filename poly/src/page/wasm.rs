@@ -1,4 +1,4 @@
-use crate::page::Effects;
+use crate::browser::Effect;
 use crate::page::JsMsg;
 use crate::page::Page;
 use serde::Serialize;
@@ -14,8 +14,11 @@ where
     Msg: serde::Serialize,
     AppEffect: serde::Serialize,
 {
-    let (model, effects) = page.init()?;
-    encode_model_and_effects(&ModelAndEffects { model, effects })
+    let (model, effect) = page.init()?;
+    encode_model_and_effects(&ModelAndEffects {
+        model,
+        effects: effect.into_vec(),
+    })
 }
 
 pub fn view<P, Model, Msg, AppEffect, Markup>(
@@ -76,9 +79,12 @@ where
 {
     let msg = decode_msg(js_msg)?;
     let mut model = decode_model(js_model)?;
-    let effects = page.update(&msg, &mut model)?;
+    let effect = page.update(&msg, &mut model)?;
 
-    encode_model_and_effects(&ModelAndEffects { model, effects })
+    encode_model_and_effects(&ModelAndEffects {
+        model,
+        effects: effect.into_vec(),
+    })
 }
 
 pub fn update_from_js<P, Model, Msg, AppEffect, Markup>(
@@ -96,9 +102,12 @@ where
 {
     let msg = decode_value(js_msg)?;
     let mut model = decode_model(js_model)?;
-    let effects = page.update_from_js(msg, &mut model)?;
+    let effect = page.update_from_js(msg, &mut model)?;
 
-    encode_model_and_effects(&ModelAndEffects { model, effects })
+    encode_model_and_effects(&ModelAndEffects {
+        model,
+        effects: effect.into_vec(),
+    })
 }
 
 pub fn encode_js_value(value: impl Serialize) -> Result<JsValue, serde_wasm_bindgen::Error> {
@@ -155,5 +164,5 @@ fn decode_value(js_msg: &JsValue) -> Result<JsMsg, JsValue> {
 #[serde(rename_all = "camelCase")]
 pub struct ModelAndEffects<Model, Msg, AppEffect> {
     pub model: Model,
-    pub effects: Effects<Msg, AppEffect>,
+    pub effects: Vec<Effect<Msg, AppEffect>>,
 }

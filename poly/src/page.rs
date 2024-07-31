@@ -1,21 +1,22 @@
 pub mod wasm;
 
+use crate::browser::effect;
 use crate::browser::DomId;
-use crate::browser::Effects;
+use crate::browser::Effect;
 use crate::browser::Subscriptions;
 use maud::html;
 
 pub trait Page<Model, Msg, AppEffect, Markup> {
     fn id(&self) -> &'static dyn DomId;
-    fn init(&self) -> Result<(Model, Effects<Msg, AppEffect>), String>;
+    fn init(&self) -> Result<(Model, Effect<Msg, AppEffect>), String>;
     fn subscriptions(&self, model: &Model) -> Subscriptions<Msg, AppEffect>;
-    fn update(&self, msg: &Msg, model: &mut Model) -> Result<Effects<Msg, AppEffect>, String>;
+    fn update(&self, msg: &Msg, model: &mut Model) -> Result<Effect<Msg, AppEffect>, String>;
     fn update_from_js(
         &self,
         _msg: JsMsg,
         _model: &mut Model,
-    ) -> Result<Effects<Msg, AppEffect>, String> {
-        Ok(vec![])
+    ) -> Result<Effect<Msg, AppEffect>, String> {
+        Ok(effect::none())
     }
     fn view(&self, model: &Model) -> PageMarkup<Markup>;
     fn render(&self, markup: Markup) -> String;
