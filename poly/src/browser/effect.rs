@@ -5,6 +5,7 @@ pub mod dom;
 pub mod effectful_msg;
 pub mod local_storage;
 pub mod navigation;
+pub mod session_storage;
 pub mod time;
 
 use crate::browser::effect::browser::Browser;
@@ -14,6 +15,7 @@ use crate::browser::effect::dom::Dom;
 use crate::browser::effect::effectful_msg::EffectfulMsg;
 use crate::browser::effect::local_storage::LocalStorage;
 use crate::browser::effect::navigation::Navigation;
+use crate::browser::effect::session_storage::SessionStorage;
 use crate::browser::effect::time::Time;
 
 #[derive(Clone, serde::Serialize)]
@@ -26,6 +28,7 @@ pub enum Effect<Msg, AppEffect> {
     Time(Time),
     Navigation(Navigation),
     LocalStorage(LocalStorage),
+    SessionStorage(SessionStorage),
     Console(Console),
     Clipboard(Clipboard),
     Browser(Browser),
