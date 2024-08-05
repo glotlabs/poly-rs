@@ -412,6 +412,26 @@ pub fn on_keydown<Msg, AppEffect>(
     })
 }
 
+pub fn on_keydown_with_options<Msg, AppEffect>(
+    key: Key,
+    modifier: ModifierKey,
+    propagation: EventPropagation,
+    msg: Msg,
+) -> Subscription<Msg, AppEffect> {
+    Subscription::EventListener(EventListener {
+        id: format!("keyboard-keydown-{}-{}", key, modifier),
+        listen_target: ListenTarget::Document,
+        event_type: EventType::Keydown,
+        matchers: vec![EventMatcher::KeyboardKey {
+            key,
+            requires_ctrl: modifier.requires_ctrl(),
+            requires_meta: modifier.requires_meta(),
+        }],
+        msg: SubscriptionMsg::pure(msg),
+        propagation,
+    })
+}
+
 pub fn on_window_resize<Msg, AppEffect, ToMsg, T>(to_msg: ToMsg) -> Subscription<Msg, AppEffect>
 where
     ToMsg: Fn(Capture<T>) -> Msg,
