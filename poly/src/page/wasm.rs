@@ -8,12 +8,11 @@ use wasm_bindgen::prelude::*;
 const JSON_SERIALIZER: serde_wasm_bindgen::Serializer =
     serde_wasm_bindgen::Serializer::json_compatible();
 
-pub fn init<P, Model, Msg, AppEffect, Markup>(page: &P) -> Result<JsValue, JsValue>
+pub fn init<P, Model, Msg, Markup>(page: &P) -> Result<JsValue, JsValue>
 where
-    P: Page<Model, Msg, AppEffect, Markup>,
+    P: Page<Model, Msg, Markup>,
     Model: serde::Serialize,
     Msg: serde::Serialize,
-    AppEffect: serde::Serialize,
 {
     let (model, effect) = page.init()?;
     encode_model_and_effects(&ModelAndEffects {
@@ -22,12 +21,9 @@ where
     })
 }
 
-pub fn view<P, Model, Msg, AppEffect, Markup>(
-    page: &P,
-    js_model: &JsValue,
-) -> Result<String, JsValue>
+pub fn view<P, Model, Msg, Markup>(page: &P, js_model: &JsValue) -> Result<String, JsValue>
 where
-    P: Page<Model, Msg, AppEffect, Markup>,
+    P: Page<Model, Msg, Markup>,
     Model: serde::de::DeserializeOwned,
 {
     let model = decode_model(js_model)?;
@@ -36,12 +32,9 @@ where
     Ok(page.render_page(markup))
 }
 
-pub fn view_body<P, Model, Msg, AppEffect, Markup>(
-    page: &P,
-    js_model: &JsValue,
-) -> Result<String, JsValue>
+pub fn view_body<P, Model, Msg, Markup>(page: &P, js_model: &JsValue) -> Result<String, JsValue>
 where
-    P: Page<Model, Msg, AppEffect, Markup>,
+    P: Page<Model, Msg, Markup>,
     Model: serde::de::DeserializeOwned,
 {
     let model = decode_model(js_model)?;
@@ -50,33 +43,31 @@ where
     Ok(page.render(markup.body))
 }
 
-pub fn get_subscriptions<P, Model, Msg, AppEffect, Markup>(
+pub fn get_subscriptions<P, Model, Msg, Markup>(
     page: &P,
     js_model: &JsValue,
 ) -> Result<JsValue, JsValue>
 where
-    P: Page<Model, Msg, AppEffect, Markup>,
+    P: Page<Model, Msg, Markup>,
     Model: serde::de::DeserializeOwned,
     Msg: serde::Serialize,
-    AppEffect: serde::Serialize,
 {
     let model = decode_model(js_model)?;
     let subscriptions = page.subscriptions(&model);
     encode_subscriptions(subscriptions.into_vec())
 }
 
-pub fn update<P, Model, Msg, AppEffect, Markup>(
+pub fn update<P, Model, Msg, Markup>(
     page: &P,
     js_msg: &JsValue,
     js_model: &JsValue,
 ) -> Result<JsValue, JsValue>
 where
-    P: Page<Model, Msg, AppEffect, Markup>,
+    P: Page<Model, Msg, Markup>,
     Msg: serde::Serialize,
     Msg: serde::de::DeserializeOwned,
     Model: serde::de::DeserializeOwned,
     Model: serde::Serialize,
-    AppEffect: serde::Serialize,
 {
     let msg = decode_msg(js_msg)?;
     let mut model = decode_model(js_model)?;
@@ -88,18 +79,17 @@ where
     })
 }
 
-pub fn update_from_js<P, Model, Msg, AppEffect, Markup>(
+pub fn update_from_js<P, Model, Msg, Markup>(
     page: &P,
     js_msg: &JsValue,
     js_model: &JsValue,
 ) -> Result<JsValue, JsValue>
 where
-    P: Page<Model, Msg, AppEffect, Markup>,
+    P: Page<Model, Msg, Markup>,
     Msg: serde::Serialize,
     Msg: serde::de::DeserializeOwned,
     Model: serde::de::DeserializeOwned,
     Model: serde::Serialize,
-    AppEffect: serde::Serialize,
 {
     let msg = decode_value(js_msg)?;
     let mut model = decode_model(js_model)?;
@@ -122,24 +112,20 @@ where
     serde_wasm_bindgen::from_value(js_value.clone())
 }
 
-fn encode_model_and_effects<Model, Msg, AppEffect>(
-    model_and_effects: &ModelAndEffects<Model, Msg, AppEffect>,
+fn encode_model_and_effects<Model, Msg>(
+    model_and_effects: &ModelAndEffects<Model, Msg>,
 ) -> Result<JsValue, JsValue>
 where
     Model: serde::Serialize,
     Msg: serde::Serialize,
-    AppEffect: serde::Serialize,
 {
     encode_js_value(model_and_effects)
         .map_err(|err| format!("Failed to encode model and effects: {}", err).into())
 }
 
-fn encode_subscriptions<Msg, AppEffect>(
-    subscriptions: Vec<Subscription<Msg, AppEffect>>,
-) -> Result<JsValue, JsValue>
+fn encode_subscriptions<Msg>(subscriptions: Vec<Subscription<Msg>>) -> Result<JsValue, JsValue>
 where
     Msg: serde::Serialize,
-    AppEffect: serde::Serialize,
 {
     encode_js_value(subscriptions)
         .map_err(|err| format!("Failed to encode subscriptions: {}", err).into())
@@ -166,7 +152,7 @@ fn decode_value(js_msg: &JsValue) -> Result<JsMsg, JsValue> {
 
 #[derive(Clone, serde::Serialize)]
 #[serde(rename_all = "camelCase")]
-pub struct ModelAndEffects<Model, Msg, AppEffect> {
+pub struct ModelAndEffects<Model, Msg> {
     pub model: Model,
-    pub effects: Vec<Effect<Msg, AppEffect>>,
+    pub effects: Vec<Effect<Msg>>,
 }

@@ -17,13 +17,14 @@ use crate::browser::effect::local_storage::LocalStorage;
 use crate::browser::effect::navigation::Navigation;
 use crate::browser::effect::session_storage::SessionStorage;
 use crate::browser::effect::time::Time;
+use serde_json::json;
 
 #[derive(Clone, serde::Serialize)]
 #[serde(tag = "type", content = "config")]
 #[serde(rename_all = "camelCase")]
-pub enum Effect<Msg, AppEffect> {
+pub enum Effect<Msg> {
     None,
-    EffectfulMsg(Box<EffectfulMsg<Msg, AppEffect>>),
+    EffectfulMsg(Box<EffectfulMsg<Msg>>),
     Dom(Dom),
     Time(Time),
     Navigation(Navigation),
@@ -32,12 +33,12 @@ pub enum Effect<Msg, AppEffect> {
     Console(Console),
     Clipboard(Clipboard),
     Browser(Browser),
-    App(AppEffect),
-    Batch(Vec<Effect<Msg, AppEffect>>),
+    Custom(serde_json::Value),
+    Batch(Vec<Effect<Msg>>),
 }
 
-impl<Msg, AppEffect> Effect<Msg, AppEffect> {
-    pub fn into_vec(self) -> Vec<Effect<Msg, AppEffect>> {
+impl<Msg> Effect<Msg> {
+    pub fn into_vec(self) -> Vec<Effect<Msg>> {
         match self {
             Effect::Batch(effects) => effects.into_iter().flat_map(Self::into_vec).collect(),
 
@@ -46,14 +47,17 @@ impl<Msg, AppEffect> Effect<Msg, AppEffect> {
     }
 }
 
-pub fn none<Msg, AppEffect>() -> Effect<Msg, AppEffect> {
+pub fn none<Msg>() -> Effect<Msg> {
     Effect::None
 }
 
-pub fn batch<Msg, AppEffect>(effects: Vec<Effect<Msg, AppEffect>>) -> Effect<Msg, AppEffect> {
+pub fn batch<Msg>(effects: Vec<Effect<Msg>>) -> Effect<Msg> {
     Effect::Batch(effects)
 }
 
-pub fn app_effect<Msg, AppEffect>(effect: AppEffect) -> Effect<Msg, AppEffect> {
-    Effect::App(effect)
+pub fn custom<Msg, CustomEffect>(effect: CustomEffect) -> Effect<Msg>
+where
+    CustomEffect: serde::Serialize,
+{
+    Effect::Custom(json!(effect))
 }

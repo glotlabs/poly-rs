@@ -11,7 +11,7 @@ pub enum Browser {
     SetTimeout { duration: u64 },
 }
 
-pub fn set_timeout<Msg, AppEffect>(duration: Duration, msg: Msg) -> Effect<Msg, AppEffect> {
+pub fn set_timeout<Msg>(duration: Duration, msg: Msg) -> Effect<Msg> {
     let effect = Effect::Browser(Browser::SetTimeout {
         duration: duration.as_millis() as u64,
     });

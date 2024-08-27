@@ -44,7 +44,7 @@ pub enum Dom {
     },
 }
 
-pub fn focus_element<Msg, AppEffect, Id>(id: Id) -> Effect<Msg, AppEffect>
+pub fn focus_element<Msg, Id>(id: Id) -> Effect<Msg>
 where
     Id: DomId,
 {
@@ -53,7 +53,7 @@ where
     })
 }
 
-pub fn select_input_text<Msg, AppEffect, Id>(id: Id) -> Effect<Msg, AppEffect>
+pub fn select_input_text<Msg, Id>(id: Id) -> Effect<Msg>
 where
     Id: DomId,
 {
@@ -62,7 +62,7 @@ where
     })
 }
 
-pub fn get_element_json_value<Msg, AppEffect, Id>(id: Id) -> Effect<Msg, AppEffect>
+pub fn get_element_json_value<Msg, Id>(id: Id) -> Effect<Msg>
 where
     Id: DomId,
 {
@@ -72,7 +72,7 @@ where
     })
 }
 
-pub fn get_element_string_value<Msg, AppEffect, Id>(id: Id) -> Effect<Msg, AppEffect>
+pub fn get_element_string_value<Msg, Id>(id: Id) -> Effect<Msg>
 where
     Id: DomId,
 {
@@ -82,21 +82,21 @@ where
     })
 }
 
-pub fn get_radio_group_json_value<Msg, AppEffect>(selector: &Selector) -> Effect<Msg, AppEffect> {
+pub fn get_radio_group_json_value<Msg>(selector: &Selector) -> Effect<Msg> {
     Effect::Dom(Dom::GetRadioGroupValue {
         selector: selector.clone(),
         parse_as_json: true,
     })
 }
 
-pub fn get_radio_group_string_value<Msg, AppEffect>(selector: &Selector) -> Effect<Msg, AppEffect> {
+pub fn get_radio_group_string_value<Msg>(selector: &Selector) -> Effect<Msg> {
     Effect::Dom(Dom::GetRadioGroupValue {
         selector: selector.clone(),
         parse_as_json: false,
     })
 }
 
-pub fn get_files<Msg, AppEffect, Id>(id: Id) -> Effect<Msg, AppEffect>
+pub fn get_files<Msg, Id>(id: Id) -> Effect<Msg>
 where
     Id: DomId,
 {
@@ -105,25 +105,25 @@ where
     })
 }
 
-pub fn get_target_data_string_value<Msg, AppEffect>(name: &str) -> Effect<Msg, AppEffect> {
+pub fn get_target_data_string_value<Msg>(name: &str) -> Effect<Msg> {
     Effect::Dom(Dom::GetTargetDataValue {
         name: name.to_string(),
         parse_as_json: false,
     })
 }
 
-pub fn get_target_data_json_value<Msg, AppEffect>(name: &str) -> Effect<Msg, AppEffect> {
+pub fn get_target_data_json_value<Msg>(name: &str) -> Effect<Msg> {
     Effect::Dom(Dom::GetTargetDataValue {
         name: name.to_string(),
         parse_as_json: true,
     })
 }
 
-pub fn window_size<Msg, AppEffect>() -> Effect<Msg, AppEffect> {
+pub fn window_size<Msg>() -> Effect<Msg> {
     Effect::Dom(Dom::GetWindowSize)
 }
 
-pub fn dispatch_window_event<Msg, AppEffect>(event_type: &str) -> Effect<Msg, AppEffect> {
+pub fn dispatch_window_event<Msg>(event_type: &str) -> Effect<Msg> {
     Effect::Dom(Dom::DispatchEvent {
         event_target: EventTarget::Window,
         event_type: event_type.to_string(),
@@ -132,7 +132,7 @@ pub fn dispatch_window_event<Msg, AppEffect>(event_type: &str) -> Effect<Msg, Ap
     })
 }
 
-pub fn dispatch_document_event<Msg, AppEffect>(event_type: &str) -> Effect<Msg, AppEffect> {
+pub fn dispatch_document_event<Msg>(event_type: &str) -> Effect<Msg> {
     Effect::Dom(Dom::DispatchEvent {
         event_target: EventTarget::Document,
         event_type: event_type.to_string(),
@@ -141,10 +141,7 @@ pub fn dispatch_document_event<Msg, AppEffect>(event_type: &str) -> Effect<Msg, 
     })
 }
 
-pub fn dispatch_element_event<Msg, AppEffect>(
-    id: impl DomId,
-    event_type: &str,
-) -> Effect<Msg, AppEffect> {
+pub fn dispatch_element_event<Msg>(id: impl DomId, event_type: &str) -> Effect<Msg> {
     Effect::Dom(Dom::DispatchEvent {
         event_target: EventTarget::Element {
             element_id: id.to_string(),

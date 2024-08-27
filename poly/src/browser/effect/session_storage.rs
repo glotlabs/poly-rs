@@ -12,7 +12,7 @@ pub enum SessionStorage {
     SetItem { key: String, value: Value },
 }
 
-pub fn get_item<Msg, AppEffect, ToMsg, T>(key: &str, to_msg: ToMsg) -> Effect<Msg, AppEffect>
+pub fn get_item<Msg, ToMsg, T>(key: &str, to_msg: ToMsg) -> Effect<Msg>
 where
     ToMsg: Fn(Capture<T>) -> Msg,
     T: Default,
@@ -25,11 +25,7 @@ where
     effectful_msg(msg, effect)
 }
 
-pub fn set_item<Msg, AppEffect, V, ToMsg>(
-    key: &str,
-    value: V,
-    to_msg: ToMsg,
-) -> Effect<Msg, AppEffect>
+pub fn set_item<Msg, V, ToMsg>(key: &str, value: V, to_msg: ToMsg) -> Effect<Msg>
 where
     V: serde::Serialize,
     ToMsg: Fn(Capture<bool>) -> Msg,

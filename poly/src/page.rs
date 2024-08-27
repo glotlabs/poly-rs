@@ -6,16 +6,12 @@ use crate::browser::effect::Effect;
 use crate::browser::subscription::Subscription;
 use maud::html;
 
-pub trait Page<Model, Msg, AppEffect, Markup> {
+pub trait Page<Model, Msg, Markup> {
     fn id(&self) -> &'static dyn DomId;
-    fn init(&self) -> Result<(Model, Effect<Msg, AppEffect>), String>;
-    fn subscriptions(&self, model: &Model) -> Subscription<Msg, AppEffect>;
-    fn update(&self, msg: &Msg, model: &mut Model) -> Result<Effect<Msg, AppEffect>, String>;
-    fn update_from_js(
-        &self,
-        _msg: JsMsg,
-        _model: &mut Model,
-    ) -> Result<Effect<Msg, AppEffect>, String> {
+    fn init(&self) -> Result<(Model, Effect<Msg>), String>;
+    fn subscriptions(&self, model: &Model) -> Subscription<Msg>;
+    fn update(&self, msg: &Msg, model: &mut Model) -> Result<Effect<Msg>, String>;
+    fn update_from_js(&self, _msg: JsMsg, _model: &mut Model) -> Result<Effect<Msg>, String> {
         Ok(effect::none())
     }
     fn view(&self, model: &Model) -> PageMarkup<Markup>;

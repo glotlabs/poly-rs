@@ -9,14 +9,14 @@ pub enum Navigation {
     SetLocation(String),
 }
 
-pub fn push_url<Msg, AppEffect>(url: &str) -> Effect<Msg, AppEffect> {
+pub fn push_url<Msg>(url: &str) -> Effect<Msg> {
     Effect::Navigation(Navigation::PushUrl(url.to_string()))
 }
 
-pub fn replace_url<Msg, AppEffect>(url: &str) -> Effect<Msg, AppEffect> {
+pub fn replace_url<Msg>(url: &str) -> Effect<Msg> {
     Effect::Navigation(Navigation::ReplaceUrl(url.to_string()))
 }
 
-pub fn set_location<Msg, AppEffect>(url: &str) -> Effect<Msg, AppEffect> {
+pub fn set_location<Msg>(url: &str) -> Effect<Msg> {
     Effect::Navigation(Navigation::SetLocation(url.to_string()))
 }

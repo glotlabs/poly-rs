@@ -6,13 +6,13 @@ use std::time::Duration;
 
 #[derive(Clone, serde::Serialize)]
 #[serde(rename_all = "camelCase")]
-pub struct Interval<Msg, AppEffect> {
+pub struct Interval<Msg> {
     id: String,
     duration: u64,
-    msg: SubscriptionMsg<Msg, AppEffect>,
+    msg: SubscriptionMsg<Msg>,
 }
 
-pub fn interval<Msg, AppEffect>(duration: Duration, msg: Msg) -> Subscription<Msg, AppEffect> {
+pub fn interval<Msg>(duration: Duration, msg: Msg) -> Subscription<Msg> {
     Subscription::Interval(Interval {
         id: format!("interval-{}", duration.as_millis()),
         duration: duration.as_millis() as u64,
@@ -20,11 +20,11 @@ pub fn interval<Msg, AppEffect>(duration: Duration, msg: Msg) -> Subscription<Ms
     })
 }
 
-pub fn interval_effect<Msg, AppEffect, ToMsg, T>(
+pub fn interval_effect<Msg, ToMsg, T>(
     duration: Duration,
     to_msg: ToMsg,
-    effect: Effect<Msg, AppEffect>,
-) -> Subscription<Msg, AppEffect>
+    effect: Effect<Msg>,
+) -> Subscription<Msg>
 where
     ToMsg: Fn(Capture<T>) -> Msg,
     T: Default,

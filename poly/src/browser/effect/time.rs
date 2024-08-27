@@ -7,6 +7,6 @@ pub enum Time {
     CurrentTime,
 }
 
-pub fn current_time<Msg, AppEffect>() -> Effect<Msg, AppEffect> {
+pub fn current_time<Msg>() -> Effect<Msg> {
     Effect::Time(Time::CurrentTime)
 }

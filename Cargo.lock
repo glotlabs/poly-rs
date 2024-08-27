@@ -37,23 +37,24 @@ checksum = "a7a70ba024b9dc04c27ea2f0c0548feb474ec5c54bba33a7f72f873a39d07b24"
 
 [[package]]
 name = "maud"
-version = "0.23.0"
+version = "0.26.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7384febb4f8fc970cc2efab1650a6f48cac2e79b0b29587c90497b646fb10e1e"
+checksum = "df518b75016b4289cdddffa1b01f2122f4a49802c93191f3133f6dc2472ebcaa"
 dependencies = [
+ "itoa",
  "maud_macros",
 ]
 
 [[package]]
 name = "maud_macros"
-version = "0.23.0"
+version = "0.26.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "423430ac467408136d7de93f2929debd8a7bc3e795c92476f45e259b158e3355"
+checksum = "fa453238ec218da0af6b11fc5978d3b5c3a45ed97b722391a2a11f3306274e18"
 dependencies = [
  "proc-macro-error",
  "proc-macro2",
  "quote",
- "syn 1.0.109",
+ "syn 2.0.74",
 ]
 
 [[package]]
@@ -96,7 +97,6 @@ dependencies = [
  "proc-macro-error-attr",
  "proc-macro2",
  "quote",
- "syn 1.0.109",
  "version_check",
 ]
 

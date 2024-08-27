@@ -79,16 +79,16 @@ impl fmt::Display for ModifierKey {
 
 #[derive(Clone, serde::Serialize)]
 #[serde(rename_all = "camelCase")]
-pub struct EventListener<Msg, AppEffect> {
+pub struct EventListener<Msg> {
     pub id: String,
     pub listen_target: ListenTarget,
     pub event_type: EventType,
     pub matchers: Vec<EventMatcher>,
-    pub msg: SubscriptionMsg<Msg, AppEffect>,
+    pub msg: SubscriptionMsg<Msg>,
     pub propagation: EventPropagation,
 }
 
-pub fn on_click<Id, Msg, AppEffect>(id: Id, msg: Msg) -> Subscription<Msg, AppEffect>
+pub fn on_click<Id, Msg>(id: Id, msg: Msg) -> Subscription<Msg>
 where
     Id: DomId,
 {
@@ -107,7 +107,7 @@ where
     })
 }
 
-pub fn on_click_closest<Id, Msg, AppEffect>(id: Id, msg: Msg) -> Subscription<Msg, AppEffect>
+pub fn on_click_closest<Id, Msg>(id: Id, msg: Msg) -> Subscription<Msg>
 where
     Id: DomId,
 {
@@ -126,11 +126,11 @@ where
     })
 }
 
-pub fn on_click_selector<Msg, AppEffect, ToMsg, T>(
+pub fn on_click_selector<Msg, ToMsg, T>(
     selector: Selector,
-    effect: Effect<Msg, AppEffect>,
+    effect: Effect<Msg>,
     to_msg: ToMsg,
-) -> Subscription<Msg, AppEffect>
+) -> Subscription<Msg>
 where
     ToMsg: Fn(Capture<T>) -> Msg,
     T: Default,
@@ -148,11 +148,11 @@ where
     })
 }
 
-pub fn on_click_selector_closest<Msg, AppEffect, ToMsg, T>(
+pub fn on_click_selector_closest<Msg, ToMsg, T>(
     selector: Selector,
-    effect: Effect<Msg, AppEffect>,
+    effect: Effect<Msg>,
     to_msg: ToMsg,
-) -> Subscription<Msg, AppEffect>
+) -> Subscription<Msg>
 where
     ToMsg: Fn(Capture<T>) -> Msg,
     T: Default,
@@ -170,7 +170,7 @@ where
     })
 }
 
-pub fn on_mouse_down<Id, Msg, AppEffect>(id: Id, msg: Msg) -> Subscription<Msg, AppEffect>
+pub fn on_mouse_down<Id, Msg>(id: Id, msg: Msg) -> Subscription<Msg>
 where
     Id: DomId,
 {
@@ -194,7 +194,7 @@ where
     })
 }
 
-pub fn on_input<Id, Msg, AppEffect, ToMsg>(id: Id, to_msg: ToMsg) -> Subscription<Msg, AppEffect>
+pub fn on_input<Id, Msg, ToMsg>(id: Id, to_msg: ToMsg) -> Subscription<Msg>
 where
     Id: DomId,
     ToMsg: Fn(Capture<String>) -> Msg,
@@ -214,10 +214,7 @@ where
     })
 }
 
-pub fn on_change<Id, Msg, AppEffect, ToMsg, T>(
-    id: Id,
-    to_msg: ToMsg,
-) -> Subscription<Msg, AppEffect>
+pub fn on_change<Id, Msg, ToMsg, T>(id: Id, to_msg: ToMsg) -> Subscription<Msg>
 where
     Id: DomId,
     ToMsg: Fn(Capture<T>) -> Msg,
@@ -238,10 +235,7 @@ where
     })
 }
 
-pub fn on_change_string<Id, Msg, AppEffect, ToMsg>(
-    id: Id,
-    to_msg: ToMsg,
-) -> Subscription<Msg, AppEffect>
+pub fn on_change_string<Id, Msg, ToMsg>(id: Id, to_msg: ToMsg) -> Subscription<Msg>
 where
     Id: DomId,
     ToMsg: Fn(Capture<String>) -> Msg,
@@ -261,11 +255,11 @@ where
     })
 }
 
-pub fn on_change_selector<Msg, AppEffect, ToMsg, T>(
+pub fn on_change_selector<Msg, ToMsg, T>(
     selector: Selector,
     to_msg: ToMsg,
-    effect: Effect<Msg, AppEffect>,
-) -> Subscription<Msg, AppEffect>
+    effect: Effect<Msg>,
+) -> Subscription<Msg>
 where
     ToMsg: Fn(Capture<T>) -> Msg,
     T: Default,
@@ -283,10 +277,7 @@ where
     })
 }
 
-pub fn on_radio_change_string<Msg, AppEffect, ToMsg>(
-    name: &str,
-    to_msg: ToMsg,
-) -> Subscription<Msg, AppEffect>
+pub fn on_radio_change_string<Msg, ToMsg>(name: &str, to_msg: ToMsg) -> Subscription<Msg>
 where
     ToMsg: Fn(Capture<String>) -> Msg,
 {
@@ -306,10 +297,7 @@ where
     })
 }
 
-pub fn on_radio_change_json<Id, Msg, AppEffect, ToMsg>(
-    name: &str,
-    to_msg: ToMsg,
-) -> Subscription<Msg, AppEffect>
+pub fn on_radio_change_json<Id, Msg, ToMsg>(name: &str, to_msg: ToMsg) -> Subscription<Msg>
 where
     Id: DomId,
     ToMsg: Fn(Capture<String>) -> Msg,
@@ -330,7 +318,7 @@ where
     })
 }
 
-pub fn on_submit<Id, Msg, AppEffect>(id: Id, msg: Msg) -> Subscription<Msg, AppEffect>
+pub fn on_submit<Id, Msg>(id: Id, msg: Msg) -> Subscription<Msg>
 where
     Id: DomId,
 {
@@ -349,10 +337,7 @@ where
     })
 }
 
-pub fn on_keyup_element<Id, Msg, AppEffect, ToMsg>(
-    id: Id,
-    to_msg: ToMsg,
-) -> Subscription<Msg, AppEffect>
+pub fn on_keyup_element<Id, Msg, ToMsg>(id: Id, to_msg: ToMsg) -> Subscription<Msg>
 where
     Id: DomId,
     ToMsg: Fn(Capture<String>) -> Msg,
@@ -372,7 +357,7 @@ where
     })
 }
 
-pub fn on_keyup<Msg, AppEffect>(key: Key, msg: Msg) -> Subscription<Msg, AppEffect> {
+pub fn on_keyup<Msg>(key: Key, msg: Msg) -> Subscription<Msg> {
     Subscription::EventListener(EventListener {
         id: format!("keyboard-keyup-{}", key),
         listen_target: ListenTarget::Document,
@@ -390,11 +375,7 @@ pub fn on_keyup<Msg, AppEffect>(key: Key, msg: Msg) -> Subscription<Msg, AppEffe
     })
 }
 
-pub fn on_keydown<Msg, AppEffect>(
-    key: Key,
-    modifier: ModifierKey,
-    msg: Msg,
-) -> Subscription<Msg, AppEffect> {
+pub fn on_keydown<Msg>(key: Key, modifier: ModifierKey, msg: Msg) -> Subscription<Msg> {
     Subscription::EventListener(EventListener {
         id: format!("keyboard-keydown-{}-{}", key, modifier),
         listen_target: ListenTarget::Document,
@@ -412,12 +393,12 @@ pub fn on_keydown<Msg, AppEffect>(
     })
 }
 
-pub fn on_keydown_with_options<Msg, AppEffect>(
+pub fn on_keydown_with_options<Msg>(
     key: Key,
     modifier: ModifierKey,
     propagation: EventPropagation,
     msg: Msg,
-) -> Subscription<Msg, AppEffect> {
+) -> Subscription<Msg> {
     Subscription::EventListener(EventListener {
         id: format!("keyboard-keydown-{}-{}", key, modifier),
         listen_target: ListenTarget::Document,
@@ -432,7 +413,7 @@ pub fn on_keydown_with_options<Msg, AppEffect>(
     })
 }
 
-pub fn on_window_resize<Msg, AppEffect, ToMsg, T>(to_msg: ToMsg) -> Subscription<Msg, AppEffect>
+pub fn on_window_resize<Msg, ToMsg, T>(to_msg: ToMsg) -> Subscription<Msg>
 where
     ToMsg: Fn(Capture<T>) -> Msg,
     T: Default,

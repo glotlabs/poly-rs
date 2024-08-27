@@ -7,7 +7,7 @@ pub enum Console {
     Log { message: String },
 }
 
-pub fn log<Msg, AppEffect>(s: &str) -> Effect<Msg, AppEffect> {
+pub fn log<Msg>(s: &str) -> Effect<Msg> {
     Effect::Console(Console::Log {
         message: s.to_string(),
     })

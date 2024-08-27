@@ -10,7 +10,7 @@ pub enum Clipboard {
     WriteText { text: String },
 }
 
-pub fn write_text<Msg, AppEffect, ToMsg>(s: &str, to_msg: ToMsg) -> Effect<Msg, AppEffect>
+pub fn write_text<Msg, ToMsg>(s: &str, to_msg: ToMsg) -> Effect<Msg>
 where
     ToMsg: Fn(Capture<WriteTextResult>) -> Msg,
 {
